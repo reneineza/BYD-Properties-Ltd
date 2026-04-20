@@ -1,0 +1,29 @@
+{
+  "home": {
+    "heroTitle": "Premium Real Estate in Kigali — Built For Tomorrow",
+    "heroSubtitle": "Your trusted partner in premium property sales, construction management, and architectural design in Kigali, Rwanda.",
+    "heroCtaText": "Explore Properties",
+    "heroCtaLink": "/properties",
+    "statsYears": "10+",
+    "statsProjects": "30+",
+    "statsClients": "50+",
+    "statsAwards": "3",
+    "featuredTitle": "Featured Properties",
+    "featuredSubtitle": "Hand-picked properties for you"
+  },
+  "about": {
+    "title": "About BYD Properties",
+    "subtitle": "A legacy of trust, quality, and innovation in Rwandan real estate.",
+    "story": "We combine local market insight with decades of engineering expertise to deliver spaces that inspire in Kigali. From property sales to end-to-end construction management, we offer comprehensive dual expertise.",
+    "mission": "Our mission is to provide every client with an exceptional experience — from concept to keys — with transparency, ethical dealings, and unmatched service.",
+    "vision": "To be the leading real estate and construction company in East Africa, recognized for our commitment to quality and client satisfaction."
+  },
+  "contact": {
+    "address": "Kigali, Rwanda",
+    "phone": "+250788661932",
+    "email": "info@bydproperties.rw",
+    "whatsapp": "+250788661932",
+    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127602.82522851411!2d30.012480356501742!3d-1.939665510006509!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca4258ed8e797%3A0xf32b36a5411d0bc8!2sKigali%2C%20Rwanda!5e0!3m2!1sen!2seg!4v1714493361453!5m2!1sen!2seg",
+    "workingHours": "Monday – Friday: 9:00 AM – 6:00 PM"
+  }
+}

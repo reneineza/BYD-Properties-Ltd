@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #1c2d37;
+  --gold: #df9f3d;
+  --cream: #f4f1ec;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #ffffff;
+  color: var(--navy);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 3px;
+}
+
+/* Selection */
+::selection {
+  background: var(--gold);
+  color: white;
+}
+
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply rounded-full bg-gold text-white px-8 py-3 font-semibold tracking-wide transition-all duration-300 hover:bg-gold-light hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(223,159,61,0.3)] active:scale-95 inline-flex justify-center items-center;
+  }
+
+  .btn-outline {
+    @apply rounded-full border-2 border-gold text-gold px-8 py-3 font-semibold tracking-wide transition-all duration-300 hover:bg-gold hover:text-white hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(223,159,61,0.2)] active:scale-95 inline-flex justify-center items-center;
+  }
+
+  .btn-navy {
+    @apply rounded-full bg-navy text-white px-8 py-3 font-semibold tracking-wide transition-all duration-300 hover:bg-navy-light hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(28,45,55,0.3)] active:scale-95 inline-flex justify-center items-center;
+  }
+
+  /* Glassmorphism Utilities */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.05)];
+  }
+
+  .glass-dark {
+    @apply bg-navy/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)];
+  }
+
+  .glass-gold {
+    @apply bg-gold/80 backdrop-blur-md border border-white/30 shadow-[0_8px_32px_rgba(223,159,61,0.2)];
+  }
+
+  /* Typography */
+  .section-title {
+    @apply font-display text-3xl md:text-5xl font-bold text-navy leading-tight tracking-tight;
+  }
+
+  .gold-line {
+    @apply block w-16 h-1 bg-gradient-to-r from-gold to-gold-light mt-4 mb-8 rounded-full;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white rounded-3xl shadow-sm hover:shadow-[0_20px_40px_rgba(223,159,61,0.15)] hover:ring-1 hover:ring-gold/30 hover:-translate-y-2 transition-all duration-500 ease-out overflow-hidden;
+  }
+
+  .input-field {
+    @apply w-full rounded-full border border-gray-200 px-6 py-3 text-navy placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold transition-all duration-300 bg-white/90 backdrop-blur-sm;
+  }
+
+  .label {
+    @apply block text-sm font-semibold text-navy mb-1.5 uppercase tracking-wider;
+  }
+}

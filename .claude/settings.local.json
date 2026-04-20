@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript=false --tailwind --eslint --app --src-dir=false --import-alias=\"@/*\" --no-git)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/Christian's Laptop/AppData/Roaming/**)",
+      "Read(//c/Users/Christian's Laptop/AppData/Local/Programs/**)",
+      "Bash(cmd.exe /c \"where node 2>&1 && node --version && npm --version && npx --version\")",
+      "Bash(cmd.exe /c \"node --version\")",
+      "Bash(cmd.exe /c \"npm --version\")",
+      "Bash(cmd.exe /c \"node -v\")",
+      "Bash(cmd.exe /c \"npm -v\")",
+      "Bash(powershell.exe -Command \"node -v; npm -v; npx -v\")"
+    ]
+  }
+}

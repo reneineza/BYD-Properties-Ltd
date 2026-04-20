@@ -1,0 +1,240 @@
+[
+  {
+    "id": "591c54e9-6015-42d5-a004-9fe07b6a23ba",
+    "path": "/",
+    "sessionId": "oi0s0n1382smo77v9ny",
+    "referrer": "http://localhost:3000/admin/content",
+    "timestamp": "2026-04-20T13:14:35.430Z"
+  },
+  {
+    "id": "9f18755a-0283-4e29-94c1-a86360c53f82",
+    "path": "/",
+    "sessionId": "tzrmenkm1mmo77vq8o",
+    "referrer": null,
+    "timestamp": "2026-04-20T13:14:48.134Z"
+  },
+  {
+    "id": "847c09b0-507f-46cd-af34-af8ac326c1e2",
+    "path": "/properties",
+    "sessionId": "oi0s0n1382smo77v9ny",
+    "referrer": "http://localhost:3000/admin/content",
+    "timestamp": "2026-04-20T13:14:50.305Z"
+  },
+  {
+    "id": "42177659-4be6-4dc2-a417-809afec65b6f",
+    "path": "/",
+    "sessionId": "oi0s0n1382smo77v9ny",
+    "referrer": "http://localhost:3000/admin/content",
+    "timestamp": "2026-04-20T13:14:52.921Z"
+  },
+  {
+    "id": "b1e73b3f-670a-4f06-a7d4-818f59bc1415",
+    "path": "/properties",
+    "sessionId": "tzrmenkm1mmo77vq8o",
+    "referrer": null,
+    "timestamp": "2026-04-20T13:14:56.953Z"
+  },
+  {
+    "id": "6ba58869-e53b-41ea-ab82-ef5ba72c9ca3",
+    "path": "/properties",
+    "sessionId": "oi0s0n1382smo77v9ny",
+    "referrer": "http://localhost:3000/admin/content",
+    "timestamp": "2026-04-20T13:14:57.055Z"
+  },
+  {
+    "id": "1acb667e-a091-4d23-b65b-6f84f204773e",
+    "path": "/privacy-policy",
+    "sessionId": "oi0s0n1382smo77v9ny",
+    "referrer": "http://localhost:3000/admin/content",
+    "timestamp": "2026-04-20T13:16:30.518Z"
+  },
+  {
+    "id": "ff908c92-e91d-4314-8a4c-05e8a3d38ae3",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:29:02.906Z"
+  },
+  {
+    "id": "df80ab3b-f3aa-4b29-8489-e271b94ba1e8",
+    "path": "/terms-of-use",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:29:13.957Z"
+  },
+  {
+    "id": "1eab15ae-02a2-425b-a496-206d228b56c7",
+    "path": "/privacy-policy",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:29:37.050Z"
+  },
+  {
+    "id": "1cb26419-b485-4ef6-b469-f7520b316697",
+    "path": "/terms-of-use",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:29:46.505Z"
+  },
+  {
+    "id": "f7ce2eab-6603-46b5-990e-32b611bf764d",
+    "path": "/contact",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:30:39.906Z"
+  },
+  {
+    "id": "5d3e7b09-bbbb-4db9-ae66-df127a8dd900",
+    "path": "/services",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:31:00.884Z"
+  },
+  {
+    "id": "2614ecd1-aa5e-4cf9-b4bc-5c3990e12e38",
+    "path": "/services/property-sales",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:31:32.802Z"
+  },
+  {
+    "id": "3bb6484e-899e-4104-9484-46207e63b30f",
+    "path": "/properties",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:32:04.751Z"
+  },
+  {
+    "id": "7735bb2b-d3e5-40c9-9140-4ac04dd85007",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:34:21.322Z"
+  },
+  {
+    "id": "87f330cc-8ea2-4585-b72b-dea3257b8eef",
+    "path": "/contact",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:34:52.787Z"
+  },
+  {
+    "id": "23bd32bc-1e5a-4dfb-9b8a-bc3211ec45de",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:47:30.760Z"
+  },
+  {
+    "id": "7f3ae9c7-dcff-49e5-8ec1-b155680e115a",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:53:32.915Z"
+  },
+  {
+    "id": "d067869c-4a6d-428d-956b-cbb8f1368405",
+    "path": "/properties",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:55:28.038Z"
+  },
+  {
+    "id": "267983eb-f563-431b-8c3e-9298c3bccfe4",
+    "path": "/services",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:55:44.756Z"
+  },
+  {
+    "id": "58703cb7-86c0-4463-aa5e-dd41bc870101",
+    "path": "/about",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:56:24.674Z"
+  },
+  {
+    "id": "bfcd8933-c414-4115-95ac-94ab947935a4",
+    "path": "/contact",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:56:29.155Z"
+  },
+  {
+    "id": "3409d1f2-33ad-4ae4-8674-e7d3540ceffb",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:57:56.292Z"
+  },
+  {
+    "id": "4d3d28e7-0944-40e6-b268-c59ecb39e08e",
+    "path": "/properties",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T13:58:30.475Z"
+  },
+  {
+    "id": "a4ad503f-fbb9-4980-8ffe-a9a19ff8277b",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T14:54:07.088Z"
+  },
+  {
+    "id": "a889e157-4885-4a31-b95b-6a90b59d56c4",
+    "path": "/properties",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T14:54:07.244Z"
+  },
+  {
+    "id": "d9496599-57e5-4b1b-9cd2-7aa4041b83d5",
+    "path": "/services",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T14:54:14.394Z"
+  },
+  {
+    "id": "fcb18027-67c8-48e7-b485-dc5488f4646d",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T15:01:30.289Z"
+  },
+  {
+    "id": "cf0ebe1b-cbfc-4d4c-bd4f-c69a4fafa177",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T16:19:49.280Z"
+  },
+  {
+    "id": "1da3870f-2195-442a-b482-67d6b728aab3",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T16:26:19.551Z"
+  },
+  {
+    "id": "0ca93ee9-7548-470e-9a99-76c11cf3c1d3",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T16:35:51.387Z"
+  },
+  {
+    "id": "80dff2d0-f561-4e27-9d4b-130d30bc3a6d",
+    "path": "/properties",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T16:36:55.409Z"
+  },
+  {
+    "id": "a275008f-6167-40eb-9d17-e4399ca956ff",
+    "path": "/",
+    "sessionId": "hhk7zicy77mo78dzsc",
+    "referrer": "http://localhost:3000/admin/analytics",
+    "timestamp": "2026-04-20T16:37:12.963Z"
+  }
+]

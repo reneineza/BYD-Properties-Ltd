@@ -1,0 +1,26 @@
+[
+  {
+    "id": "inq-001",
+    "name": "Ahmed Hassan",
+    "email": "ahmed.hassan@email.com",
+    "phone": "+20 100 123 4567",
+    "subject": "Inquiry about Palm Hills Villa",
+    "message": "I am interested in the luxury villa listed in Palm Hills. Could you please share more details about payment plans and availability?",
+    "propertyId": "prop-001",
+    "read": false,
+    "responded": false,
+    "createdAt": "2024-03-10T09:30:00.000Z"
+  },
+  {
+    "id": "inq-002",
+    "name": "Sara Mahmoud",
+    "email": "sara.m@email.com",
+    "phone": "+20 101 987 6543",
+    "subject": "Apartment rental inquiry",
+    "message": "Hello, I am looking for a furnished apartment in Maadi for a 1-year lease. Please contact me to arrange a viewing.",
+    "propertyId": "prop-002",
+    "read": true,
+    "responded": false,
+    "createdAt": "2024-03-12T14:00:00.000Z"
+  }
+]
