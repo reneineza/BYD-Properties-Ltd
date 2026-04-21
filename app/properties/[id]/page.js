@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getPropertyById } from '@/lib/db';
 import PropertyInquiryForm from '@/components/PropertyInquiryForm';
+import WhatsAppLeadTrigger from '@/components/WhatsAppLeadTrigger';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Bed, Bath, Maximize, Phone } from 'lucide-react';
@@ -236,10 +237,6 @@ export default async function PropertyPage({ params }) {
                 <Phone className="w-5 h-5" />
                 Call Now
               </a>
-
-import WhatsAppLeadTrigger from '@/components/WhatsAppLeadTrigger';
-
-// ... (inside the component)
 
               <WhatsAppLeadTrigger 
                 propertyId={property.id} 
