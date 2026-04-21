@@ -6,6 +6,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Bed, Bath, Maximize, Phone } from 'lucide-react';
 
+export const revalidate = 60; // Revalidate every minute
+
 function getYouTubeId(url) {
   if (!url) return null;
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;

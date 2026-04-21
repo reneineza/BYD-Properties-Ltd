@@ -3,6 +3,8 @@ import { Resend } from 'resend';
 import { getProperties, createProperty, getSubscriptions } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 
+export const revalidate = 60; // Cache API response for 60s
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(request) {

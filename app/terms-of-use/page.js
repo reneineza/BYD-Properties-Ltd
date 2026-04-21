@@ -1,5 +1,7 @@
 import AnimatedSection from '@/components/AnimatedSection';
 
+export const revalidate = 3600; // Update legal docs every hour
+
 export const metadata = {
   title: 'Terms of Use',
   description: 'Read the BYD Properties Terms of Use governing use of our website and real estate services in Rwanda.',

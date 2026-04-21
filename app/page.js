@@ -1,7 +1,7 @@
 import HomePageClient from '@/components/HomePageClient';
 import { getProperties, getContent } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // Update page every 60 seconds
 
 export default async function HomePage() {
   const content = await getContent();

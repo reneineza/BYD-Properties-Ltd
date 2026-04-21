@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getContent } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export const metadata = {
   title: 'About Us',
@@ -32,9 +32,9 @@ const defaultValues = [
   { title: 'Partnership', desc: 'We build lasting relationships with our clients, treating their goals as our own.' },
 ];
 
-export default function AboutPage() {
-  const content = getContent();
-  const about = content.about || {};
+export default async function AboutPage() {
+  const content = await getContent();
+  const about = content?.about || {};
   
   const displayTeam = about.team && about.team.length > 0 ? about.team : defaultTeam;
   const displayValues = about.values && about.values.length > 0 ? about.values : defaultValues;
