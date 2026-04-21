@@ -66,7 +66,7 @@ export default function AdminPropertiesPage() {
                 <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Property</th>
                 <th className="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 hidden md:table-cell">Type</th>
                 <th className="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 hidden lg:table-cell">Status</th>
-                <th className="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 hidden lg:table-cell">Price</th>
+                <th className="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 hidden lg:table-cell">Agent</th>
                 <th className="px-4 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-500">Featured</th>
                 <th className="px-4 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Actions</th>
               </tr>
@@ -91,12 +91,15 @@ export default function AdminPropertiesPage() {
                   <td className="px-4 py-4 hidden lg:table-cell">
                     <span className={`inline-block text-xs uppercase tracking-wide px-2 py-1 ${
                       p.status === 'for-sale' ? 'bg-gold/15 text-gold-dark' : 'bg-navy/10 text-navy'
-                    }`}>
+                     }`}>
                       {p.status?.replace('-', ' ')}
                     </span>
                   </td>
                   <td className="px-4 py-4 hidden lg:table-cell text-sm font-medium text-navy">
                     {p.currency} {p.price?.toLocaleString()}
+                  </td>
+                  <td className="px-4 py-4 hidden lg:table-cell">
+                    <div className="text-xs font-medium text-navy">{p.agents?.name || 'Unassigned'}</div>
                   </td>
                   <td className="px-4 py-4 text-center">
                     <button
