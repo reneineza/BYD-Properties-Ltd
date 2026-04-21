@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -35,15 +36,20 @@ export default function AdminLoginPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white shadow-2xl"
+        className="w-full max-w-md bg-white shadow-2xl overflow-hidden rounded-sm"
       >
         {/* Header */}
-        <div className="bg-navy border-b border-white/10 px-10 py-8 text-center">
-          <div className="w-14 h-14 bg-gold flex items-center justify-center font-display font-bold text-white text-2xl mx-auto mb-4">
-            B
+        <div className="bg-navy border-b border-white/10 px-10 py-12 text-center flex flex-col items-center">
+          <div className="relative w-56 h-20 mb-4">
+            <Image 
+              src="/logo-transparent.png" 
+              alt="BYD Properties Logo" 
+              fill 
+              className="object-contain drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]"
+              priority
+            />
           </div>
-          <h1 className="font-display text-2xl font-bold text-white">BYD Properties</h1>
-          <p className="text-white/50 text-sm mt-1">Admin Dashboard</p>
+          <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Administrative Portal</p>
         </div>
 
         {/* Form */}
