@@ -3,7 +3,7 @@ import { getContent, updateContent } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 
 export async function GET() {
-  return NextResponse.json(getContent());
+  return NextResponse.json(await getContent());
 }
 
 export async function PUT(request) {
@@ -11,6 +11,6 @@ export async function PUT(request) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const data = await request.json();
-  const updated = updateContent(data);
+  const updated = await updateContent(data);
   return NextResponse.json(updated);
 }

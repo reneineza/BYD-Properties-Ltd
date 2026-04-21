@@ -11,7 +11,7 @@ export async function POST(req) {
       return NextResponse.json({ ok: true });
     }
 
-    logPageView({ path, sessionId, referrer });
+    await logPageView({ path, sessionId, referrer });
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ ok: false }, { status: 500 });

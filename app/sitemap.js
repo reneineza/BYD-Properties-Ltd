@@ -2,8 +2,8 @@ import { getProperties } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-export default function sitemap() {
-  const properties = getProperties();
+export default async function sitemap() {
+  const properties = await getProperties();
   const baseUrl = 'https://www.bydproperties.rw';
   const now = new Date().toISOString();
 
@@ -17,7 +17,7 @@ export default function sitemap() {
 
   const propertyRoutes = properties.map((p) => ({
     url: `${baseUrl}/properties/${p.id}`,
-    lastModified: p.updatedAt || p.createdAt || now,
+    lastModified: p.updated_at || p.created_at || now,
     changeFrequency: 'weekly',
     priority: 0.8,
   }));

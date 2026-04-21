@@ -8,7 +8,7 @@ export async function GET(request) {
   const status = searchParams.get('status');
   const featured = searchParams.get('featured');
 
-  let properties = getProperties();
+  let properties = await getProperties();
 
   if (type && type !== 'all') {
     properties = properties.filter((p) => p.type === type);
@@ -30,6 +30,6 @@ export async function POST(request) {
   }
 
   const data = await request.json();
-  const property = createProperty(data);
+  const property = await createProperty(data);
   return NextResponse.json(property, { status: 201 });
 }

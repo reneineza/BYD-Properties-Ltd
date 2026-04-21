@@ -7,7 +7,7 @@ export async function PUT(request, { params }) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const data = await request.json();
-  const updated = updateInquiry(params.id, data);
+  const updated = await updateInquiry(params.id, data);
   if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   return NextResponse.json(updated);
 }
