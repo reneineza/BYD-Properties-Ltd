@@ -10,10 +10,10 @@ export const metadata = {
   },
 };
 
-export default async function AdminLayout({ children }) {
+export default function AdminLayout({ children }) {
   return (
     <SessionProvider>
-      <AdminShell>{children}</AdminShell>
+      {children}
     </SessionProvider>
   );
 }
