@@ -61,7 +61,7 @@ export default function HomePageClient({ home, featured }) {
         {/* Decorative Grid */}
         <div className="absolute inset-0 opacity-[0.03] z-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-24 md:py-32">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-24 md:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
             <div className="max-w-2xl text-center lg:text-left">
@@ -76,7 +76,7 @@ export default function HomePageClient({ home, featured }) {
               </AnimatedSection>
 
               <AnimatedSection delay={0.2}>
-                <h1 className="font-display text-5xl md:text-7xl lg:text-[5.5rem] font-bold text-white leading-[1.05] mb-8">
+                <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-bold text-white leading-[1.1] md:leading-[1.05] mb-6 md:mb-8">
                   {home.heroTitle || 'Building Your Vision, Delivering Excellence'}
                   <span className="text-gold">.</span>
                 </h1>

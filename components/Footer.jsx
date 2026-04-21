@@ -59,7 +59,7 @@ export default function Footer() {
 
         {/* Main Footer */}
         <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 items-center justify-items-center text-center lg:text-left lg:justify-items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-center lg:text-left">
             {/* Brand */}
             <div className="lg:col-span-1 flex flex-col items-center lg:items-start w-full">
               <Link href="/" className="inline-block mb-6">

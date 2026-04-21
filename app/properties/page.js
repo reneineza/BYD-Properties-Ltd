@@ -29,8 +29,8 @@ function PropertiesContent() {
   return (
     <>
       {/* Filters */}
-      <div className="bg-cream border-b border-gray-200 sticky top-16 z-30">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap gap-6 items-center">
+      <div className="bg-cream border-b border-gray-200 sticky top-[64px] md:top-[80px] z-30 overflow-x-auto no-scrollbar">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex md:flex-wrap gap-6 items-center min-w-max md:min-w-0">
           <div className="flex items-center gap-3">
             <span className="text-xs uppercase tracking-widest font-bold text-navy">Type:</span>
             <div className="flex gap-2">

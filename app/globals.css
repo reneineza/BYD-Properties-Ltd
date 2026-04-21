@@ -92,6 +92,14 @@ body {
   .label {
     @apply block text-sm font-semibold text-navy mb-1.5 uppercase tracking-wider;
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 /* ── Team Flip Cards ─────────────────────────────── */

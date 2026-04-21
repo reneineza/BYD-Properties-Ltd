@@ -20,6 +20,11 @@ const playfair = Playfair_Display({
 
 const siteUrl = 'https://www.bydproperties.rw';
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: {
