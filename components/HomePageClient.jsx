@@ -333,18 +333,17 @@ export default function HomePageClient({ home, featured }) {
 
             <AnimatedSection direction="left" delay={0.2}>
               <div className="relative z-10">
-                <div className="aspect-[4/3] bg-navy-light border border-white/10 flex items-center justify-center relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-                  <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-transparent opacity-50 mix-blend-overlay" />
-                  <div className="text-center text-white/30 relative z-10">
-                    <svg className="w-24 h-24 mx-auto mb-4 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                    </svg>
-                    <p className="text-sm uppercase tracking-widest font-bold">Premium Quality</p>
-                  </div>
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 group">
+                  <img 
+                    src="/why-byd.png" 
+                    alt="Premium Quality Construction" 
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[2s]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent opacity-40" />
                 </div>
-                {/* Decorative gold border */}
-                <div className="absolute -bottom-6 -right-6 w-40 h-40 border-2 border-gold opacity-50 z-[-1]" />
-                <div className="absolute -top-6 -left-6 w-40 h-40 border-2 border-gold opacity-50 z-[-1]" />
+                {/* Decorative gold borders */}
+                <div className="absolute -bottom-6 -right-6 w-40 h-40 border-2 border-gold opacity-50 z-[-1] rounded-2xl" />
+                <div className="absolute -top-6 -left-6 w-40 h-40 border-2 border-gold opacity-50 z-[-1] rounded-2xl" />
               </div>
             </AnimatedSection>
           </div>
