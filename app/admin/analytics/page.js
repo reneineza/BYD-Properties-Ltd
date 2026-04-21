@@ -31,11 +31,11 @@ function buildMonthBuckets() {
   return months;
 }
 
-export default function AnalyticsDashboard() {
-  const properties = getProperties();
-  const inquiries  = getInquiries();
-  const agents     = getAgents();
-  const pageViews  = getPageViews();
+export default async function AnalyticsDashboard() {
+  const properties = await getProperties();
+  const inquiries  = await getInquiries();
+  const agents     = await getAgents();
+  const pageViews  = await getPageViews();
 
   // ── CMS metrics ──────────────────────────────────────────────────
   const totalProperties  = properties.length;
@@ -48,14 +48,14 @@ export default function AnalyticsDashboard() {
   // ── Monthly buckets for CMS charts ──────────────────────────────
   const months = buildMonthBuckets();
   properties.forEach((p) => {
-    if (!p.createdAt) return;
-    const d = new Date(p.createdAt);
+    if (!p.created_at) return;
+    const d = new Date(p.created_at);
     const m = months.find((mo) => mo.year === d.getFullYear() && mo.month === d.getMonth());
     if (m) m.properties++;
   });
   inquiries.forEach((inq) => {
-    if (!inq.createdAt) return;
-    const d = new Date(inq.createdAt);
+    if (!inq.created_at) return;
+    const d = new Date(inq.created_at);
     const m = months.find((mo) => mo.year === d.getFullYear() && mo.month === d.getMonth());
     if (m) m.inquiries++;
   });
@@ -74,7 +74,7 @@ export default function AnalyticsDashboard() {
 
   // ── Traffic metrics ──────────────────────────────────────────────
   const totalPageViews   = pageViews.length;
-  const uniqueSessions   = new Set(pageViews.map((v) => v.sessionId).filter(Boolean)).size;
+  const uniqueSessions   = new Set(pageViews.map((v) => v.session_id).filter(Boolean)).size;
 
   // Daily traffic — last 7 days
   const daily = buildDailyBuckets(7);
@@ -83,7 +83,7 @@ export default function AnalyticsDashboard() {
     const bucket  = daily.find((b) => b.dateStr === dateStr);
     if (!bucket) return;
     bucket.views++;
-    if (v.sessionId) bucket.sessions.add(v.sessionId);
+    if (v.session_id) bucket.sessions.add(v.session_id);
   });
   const maxViews = Math.max(...daily.map((d) => d.views), 1);
 

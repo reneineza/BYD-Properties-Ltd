@@ -4,10 +4,10 @@ import { getProperties, getInquiries, getAgents } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Dashboard' };
 
-export default function AdminDashboard() {
-  const properties = getProperties();
-  const inquiries = getInquiries();
-  const agents = getAgents();
+export default async function AdminDashboard() {
+  const properties = await getProperties();
+  const inquiries = await getInquiries();
+  const agents = await getAgents();
 
   const unread = inquiries.filter((i) => !i.read).length;
   const pendingAgents = agents.filter((a) => a.status === 'pending').length;
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
   ];
 
   const recentInquiries = [...inquiries]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .slice(0, 5);
 
   return (
@@ -119,7 +119,7 @@ export default function AdminDashboard() {
                     <p className="text-xs text-gray-400 truncate">{inq.subject || inq.message.slice(0, 50)}</p>
                   </div>
                   <time className="text-xs text-gray-400 flex-shrink-0">
-                    {new Date(inq.createdAt).toLocaleDateString()}
+                    {new Date(inq.created_at).toLocaleDateString()}
                   </time>
                 </div>
               ))

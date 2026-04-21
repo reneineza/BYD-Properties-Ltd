@@ -13,7 +13,7 @@ function getYouTubeId(url) {
 }
 
 export async function generateMetadata({ params }) {
-  const property = getPropertyById(params.id);
+  const property = await getPropertyById(params.id);
   if (!property) return { title: 'Property Not Found' };
 
   const desc = property.description
@@ -48,8 +48,8 @@ function formatPrice(price, currency) {
   return `${currency || 'RWF'} ${price.toLocaleString()}`;
 }
 
-export default function PropertyPage({ params }) {
-  const property = getPropertyById(params.id);
+export default async function PropertyPage({ params }) {
+  const property = await getPropertyById(params.id);
 
   if (!property) {
     notFound();

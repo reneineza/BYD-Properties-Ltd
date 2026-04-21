@@ -11,7 +11,7 @@ export default function AdminInquiriesPage() {
     fetch('/api/inquiries')
       .then((r) => r.json())
       .then((data) => {
-        setInquiries([...data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+        setInquiries([...data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
         setLoading(false);
       });
   }, []);
@@ -85,7 +85,7 @@ export default function AdminInquiriesPage() {
                           {inq.name}
                         </span>
                         <time className="text-xs text-gray-400 flex-shrink-0">
-                          {new Date(inq.createdAt).toLocaleDateString()}
+                          {new Date(inq.created_at).toLocaleDateString()}
                         </time>
                       </div>
                       <p className="text-xs text-gray-400 truncate mt-0.5">
@@ -120,7 +120,7 @@ export default function AdminInquiriesPage() {
                     )}
                   </div>
                   <time className="text-xs text-gray-400 mt-1 block">
-                    {new Date(selected.createdAt).toLocaleString()}
+                    {new Date(selected.created_at).toLocaleString()}
                   </time>
                 </div>
                 <div className="flex gap-2 flex-shrink-0">

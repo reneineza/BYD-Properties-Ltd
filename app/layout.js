@@ -83,9 +83,9 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
-  const content = getContent();
-  const contact = content.contact || {};
+export default async function RootLayout({ children }) {
+  const content = await getContent();
+  const contact = content?.contact || {};
 
   const jsonLd = {
     '@context': 'https://schema.org',

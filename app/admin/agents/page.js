@@ -19,7 +19,7 @@ export default function AdminAgentsPage() {
     fetch('/api/agents')
       .then((r) => r.json())
       .then((data) => {
-        setAgents([...data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+        setAgents([...data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
         setLoading(false);
       });
   }, []);
@@ -76,21 +76,21 @@ export default function AdminAgentsPage() {
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-navy rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                      {agent.photo ? (
+                      {agent.photo_url ? (
                         <div className="relative w-full h-full rounded-full overflow-hidden">
                           <Image 
-                            src={agent.photo} 
-                            alt={agent.fullName} 
+                            src={agent.photo_url} 
+                            alt={agent.name} 
                             fill 
                             className="object-cover" 
                           />
                         </div>
                       ) : (
-                        agent.fullName?.[0]?.toUpperCase()
+                        agent.name?.[0]?.toUpperCase()
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-navy truncate">{agent.fullName}</p>
+                      <p className="text-sm font-semibold text-navy truncate">{agent.name}</p>
                       <p className="text-xs text-gray-400 truncate">{agent.email}</p>
                     </div>
                     <span className={`text-xs px-2 py-0.5 font-medium flex-shrink-0 ${STATUS_COLORS[agent.status] || ''}`}>
@@ -109,19 +109,19 @@ export default function AdminAgentsPage() {
             <div className="p-8">
               <div className="flex items-start gap-6 mb-8">
                 <div className="w-20 h-20 bg-navy rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 overflow-hidden relative">
-                  {selected.photo ? (
+                  {selected.photo_url ? (
                     <Image 
-                      src={selected.photo} 
-                      alt={selected.fullName} 
+                      src={selected.photo_url} 
+                      alt={selected.name} 
                       fill 
                       className="object-cover" 
                     />
                   ) : (
-                    selected.fullName?.[0]?.toUpperCase()
+                    selected.name?.[0]?.toUpperCase()
                   )}
                 </div>
                 <div className="flex-1">
-                  <h2 className="font-display text-2xl font-bold text-navy">{selected.fullName}</h2>
+                  <h2 className="font-display text-2xl font-bold text-navy">{selected.name}</h2>
                   {selected.agencyName && (
                     <p className="text-gold text-sm font-semibold mt-0.5">{selected.agencyName}</p>
                   )}
@@ -144,7 +144,9 @@ export default function AdminAgentsPage() {
                 </div>
                 <div>
                   <span className="label">Applied On</span>
-                  <p className="text-navy text-sm">{new Date(selected.createdAt).toLocaleDateString()}</p>
+                  <time className="text-xs text-gray-400 mt-1 block">
+                    {new Date(selected.created_at).toLocaleString()}
+                  </time>
                 </div>
                 {selected.agencyName && (
                   <div>
