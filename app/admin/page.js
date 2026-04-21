@@ -12,19 +12,32 @@ export default async function AdminDashboard() {
 
   const unread = inquiries.filter((i) => !i.read).length;
   const pendingAgents = agents.filter((a) => a.status === 'pending').length;
-  const forSale = properties.filter((p) => p.status === 'for-sale').length;
-  const forRent = properties.filter((p) => p.status === 'for-rent').length;
+  const pendingProperties = properties.filter((p) => !p.is_approved).length;
+  const forSale = properties.filter((p) => p.status === 'for-sale' && p.is_approved).length;
+  const forRent = properties.filter((p) => p.status === 'for-rent' && p.is_approved).length;
 
   const stats = [
     {
       label: 'Total Properties',
       value: properties.length,
-      sub: `${forSale} for sale · ${forRent} for rent`,
+      sub: `${forSale} live · ${pendingProperties} pending`,
       href: '/admin/properties',
       color: 'bg-navy',
       icon: (
         <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+        </svg>
+      ),
+    },
+    {
+      label: 'Pending Review',
+      value: pendingProperties,
+      sub: 'Needs admin approval',
+      href: '/admin/properties?filter=pending',
+      color: 'bg-orange-500',
+      icon: (
+        <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
         </svg>
       ),
     },

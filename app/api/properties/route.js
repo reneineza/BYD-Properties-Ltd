@@ -6,12 +6,15 @@ import { getServerSession } from 'next-auth';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(request) {
+  const session = await getServerSession();
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type');
   const status = searchParams.get('status');
   const featured = searchParams.get('featured');
 
-  let properties = await getProperties();
+  // If public user, only show approved
+  const onlyApproved = !session;
+  let properties = await getProperties(null, onlyApproved);
 
   if (type && type !== 'all') {
     properties = properties.filter((p) => p.type === type);
@@ -33,10 +36,18 @@ export async function POST(request) {
   }
 
   const data = await request.json();
-  const property = await createProperty(data);
+  
+  // Set approval based on role
+  // Admins are auto-approved, Agents need review
+  const isApproved = session.user.role === 'admin';
+  const property = await createProperty({ 
+    ...data, 
+    is_approved: isApproved,
+    agent_id: session.user.role === 'agent' ? session.user.id : (data.agent_id || null)
+  });
 
-  // Trigger Email Alerts in background
-  if (process.env.RESEND_API_KEY) {
+  // ONLY Trigger Email Alerts if approved
+  if (isApproved && process.env.RESEND_API_KEY) {
     (async () => {
       try {
         const subscribers = await getSubscriptions();
@@ -48,8 +59,8 @@ export async function POST(request) {
 
           await resend.emails.send({
             from: 'BYD Properties <alerts@bydproperties.rw>',
-            to: 'info@bydproperties.rw', // Send to self
-            bcc: emails, // Hide subscriber emails from each other
+            to: 'info@bydproperties.rw', 
+            bcc: emails,
             subject: `New Listing: ${title} in ${location}`,
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px;">
@@ -62,8 +73,6 @@ export async function POST(request) {
                 </div>
                 ${images?.[0] ? `<img src="${images[0]}" alt="${title}" style="width: 100%; border-radius: 8px; margin-bottom: 20px;" />` : ''}
                 <a href="${propertyUrl}" style="display: inline-block; background: #0B132B; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold;">View Property Details</a>
-                <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;" />
-                <p style="color: #999; font-size: 12px;">You received this because you subscribed to property alerts on bydproperties.rw</p>
               </div>
             `,
           });

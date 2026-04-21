@@ -26,6 +26,15 @@ export default function AdminPropertiesPage() {
     setDeleting(null);
   }
 
+  async function toggleApproval(property) {
+    const updated = await fetch(`/api/properties/${property.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ is_approved: !property.is_approved }),
+    }).then((r) => r.json());
+    setProperties((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+  }
+
   async function toggleFeatured(property) {
     const updated = await fetch(`/api/properties/${property.id}`, {
       method: 'PUT',
@@ -100,6 +109,9 @@ export default function AdminPropertiesPage() {
                   </td>
                   <td className="px-4 py-4 hidden lg:table-cell">
                     <div className="text-xs font-medium text-navy">{p.agents?.name || 'Unassigned'}</div>
+                    {!p.is_approved && (
+                      <span className="inline-block mt-1 text-[10px] bg-orange-100 text-orange-600 px-1.5 py-0.5 font-bold uppercase">Pending</span>
+                    )}
                   </td>
                   <td className="px-4 py-4 text-center">
                     <button
@@ -114,6 +126,14 @@ export default function AdminPropertiesPage() {
                   </td>
                   <td className="px-4 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
+                      {!p.is_approved && (
+                        <button
+                          onClick={() => toggleApproval(p)}
+                          className="text-xs font-bold text-white bg-green-600 px-3 py-1.5 hover:bg-green-700 transition-colors"
+                        >
+                          Publish
+                        </button>
+                      )}
                       <Link
                         href={`/admin/properties/${p.id}/edit`}
                         className="text-xs font-medium text-navy border border-navy/20 px-3 py-1.5 hover:border-navy transition-colors"
