@@ -355,6 +355,55 @@ export default function HomePageClient({ home, featured }) {
         </div>
       </section>
 
+      {/* ── NEIGHBORHOODS ── */}
+      <section className="py-24 bg-cream">
+        <div className="max-w-7xl mx-auto px-6">
+          <AnimatedSection className="text-center mb-16">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-gold mb-3">
+              Explore Kigali
+            </p>
+            <h2 className="section-title">Discover Our Top Neighborhoods</h2>
+            <span className="gold-line mx-auto" />
+            <p className="text-gray-500 mt-6 max-w-2xl mx-auto">
+              From the quiet hills of Kiyovu to the modern luxury of Nyarutarama, 
+              find the perfect area that fits your lifestyle.
+            </p>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {['kiyovu', 'nyarutarama', 'gacuriro', 'kibagabaga', 'kacyiru'].map((slug, i) => {
+              const areas = {
+                kiyovu: { name: 'Kiyovu', img: 'https://images.unsplash.com/photo-1626178732047-3965ff06c9e0?auto=format&fit=crop&w=400&q=80' },
+                nyarutarama: { name: 'Nyarutarama', img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80' },
+                gacuriro: { name: 'Gacuriro', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80' },
+                kibagabaga: { name: 'Kibagabaga', img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=400&q=80' },
+                kacyiru: { name: 'Kacyiru', img: 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=400&q=80' },
+              };
+              const area = areas[slug];
+              return (
+                <AnimatedSection key={slug} delay={i * 0.1}>
+                  <Link href={`/neighborhoods/${slug}`} className="group relative block aspect-[4/5] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500">
+                    <Image
+                      src={area.img}
+                      alt={area.name}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent" />
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <h3 className="text-white font-display font-bold text-lg mb-1">{area.name}</h3>
+                      <span className="text-gold text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        View Guide →
+                      </span>
+                    </div>
+                  </Link>
+                </AnimatedSection>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA BANNER ── */}
       <section className="py-20 bg-gold">
         <AnimatedSection className="max-w-3xl mx-auto px-6 text-center">
