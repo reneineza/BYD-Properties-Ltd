@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import AdminShell from '../AdminShell';
 
 const STATUS_COLORS = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -47,168 +48,164 @@ export default function AdminAgentsPage() {
   const pendingCount = agents.filter((a) => a.status === 'pending').length;
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="font-display text-3xl font-bold text-navy">Agent Applications</h1>
-        <p className="text-gray-500 mt-1">
-          {agents.length} total · {pendingCount} pending review
-        </p>
-      </div>
+    <AdminShell>
+      <div>
+        <div className="mb-8">
+          <h1 className="font-display text-3xl font-bold text-navy">Agent Applications</h1>
+          <p className="text-gray-500 mt-1">
+            {agents.length} total · {pendingCount} pending review
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" style={{ minHeight: '600px' }}>
-        {/* List */}
-        <div className="bg-white shadow-sm border border-gray-100 overflow-y-auto lg:col-span-1">
-          {loading ? (
-            <div className="space-y-2 p-4">
-              {[...Array(4)].map((_, i) => <div key={i} className="h-16 bg-gray-100 animate-pulse" />)}
-            </div>
-          ) : agents.length === 0 ? (
-            <div className="p-8 text-center text-gray-400">No applications yet.</div>
-          ) : (
-            <div className="divide-y divide-gray-50">
-              {agents.map((agent) => (
-                <button
-                  key={agent.id}
-                  onClick={() => setSelected(agent)}
-                  className={`w-full text-left px-5 py-4 hover:bg-gray-50 transition-colors ${
-                    selected?.id === agent.id ? 'bg-gold/5 border-l-2 border-gold' : ''
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-navy rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                      {agent.photo_url ? (
-                        <div className="relative w-full h-full rounded-full overflow-hidden">
-                          <Image 
-                            src={agent.photo_url} 
-                            alt={agent.name} 
-                            fill 
-                            className="object-cover" 
-                          />
-                        </div>
-                      ) : (
-                        agent.name?.[0]?.toUpperCase()
-                      )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" style={{ minHeight: '600px' }}>
+          {/* List */}
+          <div className="bg-white shadow-sm border border-gray-100 overflow-y-auto lg:col-span-1">
+            {loading ? (
+              <div className="space-y-2 p-4">
+                {[...Array(4)].map((_, i) => <div key={i} className="h-16 bg-gray-100 animate-pulse" />)}
+              </div>
+            ) : agents.length === 0 ? (
+              <div className="p-8 text-center text-gray-400">No applications yet.</div>
+            ) : (
+              <div className="divide-y divide-gray-50">
+                {agents.map((agent) => (
+                  <button
+                    key={agent.id}
+                    onClick={() => setSelected(agent)}
+                    className={`w-full text-left px-5 py-4 hover:bg-gray-50 transition-colors ${
+                      selected?.id === agent.id ? 'bg-gold/5 border-l-2 border-gold' : ''
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-navy rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                        {agent.photo_url ? (
+                          <div className="relative w-full h-full rounded-full overflow-hidden">
+                            <Image 
+                              src={agent.photo_url} 
+                              alt={agent.name} 
+                              fill 
+                              className="object-cover" 
+                            />
+                          </div>
+                        ) : (
+                          agent.name?.[0]?.toUpperCase()
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-navy truncate">{agent.name}</p>
+                        <p className="text-xs text-gray-400 truncate">{agent.email}</p>
+                      </div>
+                      <span className={`text-xs px-2 py-0.5 font-medium flex-shrink-0 ${STATUS_COLORS[agent.status] || ''}`}>
+                        {agent.status}
+                      </span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-navy truncate">{agent.name}</p>
-                      <p className="text-xs text-gray-400 truncate">{agent.email}</p>
-                    </div>
-                    <span className={`text-xs px-2 py-0.5 font-medium flex-shrink-0 ${STATUS_COLORS[agent.status] || ''}`}>
-                      {agent.status}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Detail */}
+          <div className="bg-white shadow-sm border border-gray-100 lg:col-span-2">
+            {selected ? (
+              <div className="p-8">
+                <div className="flex items-start gap-6 mb-8">
+                  <div className="w-20 h-20 bg-navy rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 overflow-hidden relative">
+                    {selected.photo_url ? (
+                      <Image 
+                        src={selected.photo_url} 
+                        alt={selected.name} 
+                        fill 
+                        className="object-cover" 
+                      />
+                    ) : (
+                      selected.name?.[0]?.toUpperCase()
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="font-display text-2xl font-bold text-navy">{selected.name}</h2>
+                    {selected.agencyName && (
+                      <p className="text-gold text-sm font-semibold mt-0.5">{selected.agencyName}</p>
+                    )}
+                    <span className={`inline-block text-xs px-3 py-1 font-semibold mt-2 ${STATUS_COLORS[selected.status]}`}>
+                      {selected.status}
                     </span>
                   </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+                </div>
 
-        {/* Detail */}
-        <div className="bg-white shadow-sm border border-gray-100 lg:col-span-2">
-          {selected ? (
-            <div className="p-8">
-              <div className="flex items-start gap-6 mb-8">
-                <div className="w-20 h-20 bg-navy rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 overflow-hidden relative">
-                  {selected.photo_url ? (
-                    <Image 
-                      src={selected.photo_url} 
-                      alt={selected.name} 
-                      fill 
-                      className="object-cover" 
-                    />
-                  ) : (
-                    selected.name?.[0]?.toUpperCase()
-                  )}
-                </div>
-                <div className="flex-1">
-                  <h2 className="font-display text-2xl font-bold text-navy">{selected.name}</h2>
-                  {selected.agencyName && (
-                    <p className="text-gold text-sm font-semibold mt-0.5">{selected.agencyName}</p>
-                  )}
-                  <span className={`inline-block text-xs px-3 py-1 font-semibold mt-2 ${STATUS_COLORS[selected.status]}`}>
-                    {selected.status}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                  <span className="label">Email</span>
-                  <a href={`mailto:${selected.email}`} className="text-navy hover:text-gold transition-colors text-sm">
-                    {selected.email}
-                  </a>
-                </div>
-                <div>
-                  <span className="label">Phone</span>
-                  <p className="text-navy text-sm">{selected.phone}</p>
-                </div>
-                <div>
-                  <span className="label">Applied On</span>
-                  <time className="text-xs text-gray-400 mt-1 block">
-                    {new Date(selected.created_at).toLocaleString()}
-                  </time>
-                </div>
-                {selected.agencyName && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <div>
-                    <span className="label">Agency</span>
-                    <p className="text-navy text-sm">{selected.agencyName}</p>
+                    <span className="label">Email</span>
+                    <a href={`mailto:${selected.email}`} className="text-navy hover:text-gold transition-colors text-sm">
+                      {selected.email}
+                    </a>
                   </div>
-                )}
-              </div>
+                  <div>
+                    <span className="label">Phone</span>
+                    <p className="text-navy text-sm">{selected.phone}</p>
+                  </div>
+                  <div>
+                    <span className="label">Applied On</span>
+                    <time className="text-xs text-gray-400 mt-1 block">
+                      {new Date(selected.created_at).toLocaleString()}
+                    </time>
+                  </div>
+                  {selected.agencyName && (
+                    <div>
+                      <span className="label">Agency</span>
+                      <p className="text-navy text-sm">{selected.agencyName}</p>
+                    </div>
+                  )}
+                </div>
 
-              <div className="mb-8">
-                <span className="label">Bio</span>
-                <div className="bg-cream p-5 text-gray-700 text-sm leading-relaxed">
-                  {selected.bio || 'No bio provided.'}
+                <div className="mb-8">
+                  <span className="label">Bio</span>
+                  <div className="bg-cream p-5 text-gray-700 text-sm leading-relaxed">
+                    {selected.bio || 'No bio provided.'}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  {selected.status !== 'approved' && (
+                    <button
+                      onClick={() => updateStatus(selected.id, 'approved')}
+                      disabled={updating === selected.id}
+                      className="btn-primary text-sm"
+                    >
+                      {updating === selected.id ? '...' : 'Approve'}
+                    </button>
+                  )}
+                  {selected.status !== 'rejected' && (
+                    <button
+                      onClick={() => updateStatus(selected.id, 'rejected')}
+                      disabled={updating === selected.id}
+                      className="btn-outline text-sm border-red-300 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500"
+                    >
+                      Reject
+                    </button>
+                  )}
+                  <a
+                    href={`mailto:${selected.email}`}
+                    className="btn-outline text-sm"
+                  >
+                    Contact Agent
+                  </a>
+                  <button
+                    onClick={() => deleteAgent(selected.id)}
+                    className="ml-auto text-xs text-red-400 hover:text-red-600 transition-colors"
+                  >
+                    Remove Application
+                  </button>
                 </div>
               </div>
-
-              <div className="flex flex-wrap gap-3">
-                {selected.status !== 'approved' && (
-                  <button
-                    onClick={() => updateStatus(selected.id, 'approved')}
-                    disabled={updating === selected.id}
-                    className="btn-primary text-sm"
-                  >
-                    {updating === selected.id ? '...' : 'Approve'}
-                  </button>
-                )}
-                {selected.status !== 'rejected' && (
-                  <button
-                    onClick={() => updateStatus(selected.id, 'rejected')}
-                    disabled={updating === selected.id}
-                    className="btn-outline text-sm border-red-300 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500"
-                  >
-                    Reject
-                  </button>
-                )}
-                {selected.status === 'pending' && (
-                  <button
-                    onClick={() => updateStatus(selected.id, 'pending')}
-                    className="hidden"
-                  />
-                )}
-                <a
-                  href={`mailto:${selected.email}`}
-                  className="btn-outline text-sm"
-                >
-                  Contact Agent
-                </a>
-                <button
-                  onClick={() => deleteAgent(selected.id)}
-                  className="ml-auto text-xs text-red-400 hover:text-red-600 transition-colors"
-                >
-                  Remove Application
-                </button>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400 text-sm min-h-[400px]">
+                Select an application to review
               </div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-full text-gray-400 text-sm min-h-[400px]">
-              Select an application to review
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </AdminShell>
   );
 }
