@@ -81,6 +81,10 @@ export const metadata = {
   alternates: {
     canonical: siteUrl,
   },
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default async function RootLayout({ children }) {

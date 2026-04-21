@@ -8,6 +8,10 @@ export const metadata = {
     default: 'Admin — BYD Properties',
     template: '%s | Admin — BYD Properties',
   },
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function AdminLayout({ children }) {
