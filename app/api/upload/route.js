@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 import { getServerSession } from 'next-auth';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(request) {
-  // Allow unauthenticated uploads only for agent profile photos
+  // Allow unauthenticated uploads only for agent profile photos (context=agent)
   // Admin uploads require a session
   const { searchParams } = new URL(request.url);
-  const context = searchParams.get('context'); // 'admin' | 'agent'
+  const context = searchParams.get('context'); 
 
   if (context === 'admin') {
     const session = await getServerSession();
@@ -24,10 +23,26 @@ export async function POST(request) {
 
   const ext = file.name.split('.').pop();
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 
-  await mkdir(uploadDir, { recursive: true });
-  await writeFile(path.join(uploadDir, filename), buffer);
+  // Upload to Supabase Storage
+  // Make sure you have a bucket named 'properties' set to PUBLIC
+  const { data, error } = await supabase.storage
+    .from('properties')
+    .upload(filename, buffer, {
+      contentType: file.type,
+      cacheControl: '3600',
+      upsert: false
+    });
 
-  return NextResponse.json({ url: `/uploads/${filename}` });
+  if (error) {
+    console.error('Supabase upload error:', error);
+    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+  }
+
+  // Get Public URL
+  const { data: { publicUrl } } = supabase.storage
+    .from('properties')
+    .getPublicUrl(filename);
+
+  return NextResponse.json({ url: publicUrl });
 }
