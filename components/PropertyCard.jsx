@@ -49,7 +49,7 @@ export default function PropertyCard({ property, index = 0 }) {
         </span>
         {/* Type Badge */}
         <span className="absolute top-4 right-4 text-xs font-bold uppercase tracking-widest bg-white/90 backdrop-blur-md text-navy px-4 py-1.5 rounded-sm shadow-lg">
-          {type}
+          {type === 'land' ? 'Land Plot' : type}
         </span>
       </div>
 

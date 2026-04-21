@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@bydproperties.com"
+              placeholder="admin@bydproperties.rw"
               className="input-field"
               required
             />

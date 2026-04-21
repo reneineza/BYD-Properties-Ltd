@@ -51,7 +51,7 @@ export default function TermsOfUsePage() {
 
           <h2 className="text-navy font-bold text-2xl mt-8 mb-4">6. Contact Us</h2>
           <p>
-            If you have any questions about these Terms, please contact us at <strong>legal@bydproperties.com</strong>.
+            If you have any questions about these Terms, please contact us at <strong>legal@bydproperties.rw</strong>.
           </p>
         </div>
       </AnimatedSection>

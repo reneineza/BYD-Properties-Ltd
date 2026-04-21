@@ -50,7 +50,7 @@ export default function PrivacyPolicyPage() {
 
           <h2 className="text-navy font-bold text-2xl mt-8 mb-4">5. Contact Us</h2>
           <p>
-            If you have any questions about this Privacy Policy, please contact us at <strong>privacy@bydproperties.com</strong>.
+            If you have any questions about this Privacy Policy, please contact us at <strong>privacy@bydproperties.rw</strong>.
           </p>
         </div>
       </AnimatedSection>

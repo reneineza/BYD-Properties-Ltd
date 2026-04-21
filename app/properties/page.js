@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import PropertyCard from '@/components/PropertyCard';
 import AnimatedSection from '@/components/AnimatedSection';
 
-const TYPES = ['all', 'residential', 'commercial'];
+const TYPES = ['all', 'residential', 'commercial', 'land'];
 const STATUSES = ['all', 'for-sale', 'for-rent'];
 
 function PropertiesContent() {
@@ -44,7 +44,7 @@ function PropertiesContent() {
                       : 'border border-navy/20 text-navy hover:border-navy'
                   }`}
                 >
-                  {t}
+                  {t === 'land' ? 'Land Plot' : t}
                 </button>
               ))}
             </div>
@@ -106,9 +106,6 @@ export default function PropertiesPage() {
       <section className="bg-navy pt-32 pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <AnimatedSection>
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-gold mb-3">
-              Our Portfolio
-            </p>
             <h1 className="font-display text-5xl font-bold text-white mb-4">Properties</h1>
             <span className="block w-12 h-0.5 bg-gold" />
             <p className="text-white/55 mt-6 max-w-lg">

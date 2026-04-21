@@ -35,7 +35,7 @@ export default function ServicesPage() {
             <h1 className="font-display text-5xl md:text-6xl font-bold text-white mb-6">Our Services</h1>
             <span className="block w-16 h-1 bg-gold mx-auto" />
             <p className="text-white/70 mt-8 max-w-2xl mx-auto text-lg leading-relaxed">
-              From ground-up construction to luxury property sales and expert renovation — BYD
+              From ground-up construction to luxury property sales — BYD
               Properties delivers end-to-end real estate excellence.
             </p>
           </AnimatedSection>

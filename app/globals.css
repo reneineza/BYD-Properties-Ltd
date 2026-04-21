@@ -88,7 +88,40 @@ body {
     @apply w-full rounded-full border border-gray-200 px-6 py-3 text-navy placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold transition-all duration-300 bg-white/90 backdrop-blur-sm;
   }
 
+
   .label {
     @apply block text-sm font-semibold text-navy mb-1.5 uppercase tracking-wider;
   }
+}
+
+/* ── Team Flip Cards ─────────────────────────────── */
+.team-flip-card {
+  perspective: 1000px;
+  height: 280px;
+}
+
+.team-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.team-flip-card:hover .team-flip-inner {
+  transform: rotateY(180deg);
+}
+
+.team-flip-front,
+.team-flip-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+.team-flip-back {
+  transform: rotateY(180deg);
 }

@@ -11,7 +11,10 @@
     "bathrooms": 3,
     "area": 450,
     "description": "A stunning modern villa located in the prestigious Remera-Kabeza neighborhood. Perfect for a large family looking for elegance and comfort.",
-    "images": ["/images/properties/villa-1.jpg", "/images/properties/apartment-1.jpg"],
+    "images": [
+      "/images/properties/villa-1.jpg",
+      "/images/properties/apartment-1.jpg"
+    ],
     "featured": true,
     "createdAt": "2024-04-15T10:00:00.000Z"
   },
@@ -27,7 +30,10 @@
     "bathrooms": 2,
     "area": 200,
     "description": "A modern residential apartment complex in the heart of Kibagabaga (Coming Soon). A prime investment opportunity.",
-    "images": ["/images/properties/apartment-1.jpg", "/images/properties/penthouse-1.jpg"],
+    "images": [
+      "/images/properties/apartment-1.jpg",
+      "/images/properties/penthouse-1.jpg"
+    ],
     "featured": true,
     "createdAt": "2024-04-16T10:00:00.000Z"
   },
@@ -43,7 +49,10 @@
     "bathrooms": 5,
     "area": 320,
     "description": "An impressive executive duplex with serene surroundings. Features a beautiful open-plan layout and high-quality finishes.",
-    "images": ["/images/properties/penthouse-1.jpg", "/images/properties/townhouse-1.jpg"],
+    "images": [
+      "/images/properties/penthouse-1.jpg",
+      "/images/properties/townhouse-1.jpg"
+    ],
     "featured": true,
     "createdAt": "2024-04-17T10:00:00.000Z"
   },
@@ -59,8 +68,28 @@
     "bathrooms": 5,
     "area": 380,
     "description": "A flagship residence designed for modern living. Spacious, well-lit, and located in one of Kigali's most sought-after neighborhoods.",
-    "images": ["/images/properties/townhouse-1.jpg", "/images/properties/villa-1.jpg"],
+    "images": [
+      "/images/properties/townhouse-1.jpg",
+      "/images/properties/villa-1.jpg"
+    ],
     "featured": true,
     "createdAt": "2024-04-18T10:00:00.000Z"
+  },
+  {
+    "title": "Spacious R1 Zoning Land Plot in Bugesera",
+    "type": "land",
+    "status": "for-sale",
+    "price": 20000000,
+    "currency": "RWF",
+    "location": "Bugesera",
+    "bedrooms": 0,
+    "bathrooms": 0,
+    "area": 550,
+    "description": "",
+    "youtubeUrl": "",
+    "featured": true,
+    "images": [],
+    "id": "6a0653d6-8a6c-40fd-be9a-8a485a46d6e4",
+    "createdAt": "2026-04-21T13:17:18.592Z"
   }
 ]

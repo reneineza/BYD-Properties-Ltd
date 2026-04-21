@@ -8,6 +8,17 @@ export default function WhatsAppButton() {
   const [visible, setVisible] = useState(false);
   const [tooltip, setTooltip] = useState(false);
   const pathname = usePathname();
+  const [whatsapp, setWhatsapp] = useState('250788661932');
+
+  useEffect(() => {
+    fetch('/api/content')
+      .then(r => r.json())
+      .then(data => {
+        if (data.contact?.whatsapp) {
+          setWhatsapp(data.contact.whatsapp.replace(/\D/g, ''));
+        }
+      });
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 1500);
@@ -17,11 +28,10 @@ export default function WhatsAppButton() {
   // Hide on admin pages
   if (pathname?.startsWith('/admin')) return null;
 
-  const whatsappNumber = '+250788661932';
   const message = encodeURIComponent(
     'Hello BYD Properties! I am interested in your real estate services.'
   );
-  const href = `https://wa.me/${whatsappNumber}?text=${message}`;
+  const href = `https://wa.me/${whatsapp}?text=${message}`;
 
   return (
     <AnimatePresence>

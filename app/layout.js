@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import PageViewTracker from '@/components/PageViewTracker';
+import { getContent } from '@/lib/db';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,6 +38,10 @@ export const metadata = {
     'Rwanda property market',
     'property investment Rwanda',
     'architecture Rwanda',
+    'architecture Kigali',
+    'architecture design Kigali',
+    'architecture design Rwanda',
+    'architecture design',
   ],
   authors: [{ name: 'BYD Properties', url: siteUrl }],
   creator: 'BYD Properties',
@@ -74,14 +79,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const content = getContent();
+  const contact = content.contact || {};
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
     name: 'BYD Properties',
     description: "Rwanda's trusted partner in premium construction, real estate, and property development since 2010.",
     url: 'https://www.bydproperties.rw',
-    telephone: '+250788661932',
-    email: 'info@bydproperties.com',
+    telephone: contact.phone || '+250788661932',
+    email: contact.email || 'info@bydproperties.rw',
     foundingDate: '2010',
     address: {
       '@type': 'PostalAddress',

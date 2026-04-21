@@ -14,9 +14,68 @@
   "about": {
     "title": "About BYD Properties",
     "subtitle": "A legacy of trust, quality, and innovation in Rwandan real estate.",
-    "story": "We combine local market insight with decades of engineering expertise to deliver spaces that inspire in Kigali. From property sales to end-to-end construction management, we offer comprehensive dual expertise.",
+    "story": " We combine decades of engineering expertise with a passion for design to deliver spaces that inspire.\n\nToday, our work spans from residential developments, commercials, and exclusive property renting and sales — all underpinned by the same founding commitment: to build with integrity and deliver with pride.",
     "mission": "Our mission is to provide every client with an exceptional experience — from concept to keys — with transparency, ethical dealings, and unmatched service.",
-    "vision": "To be the leading real estate and construction company in East Africa, recognized for our commitment to quality and client satisfaction."
+    "vision": "To be the leading real estate and construction company in East Africa, recognized for our commitment to quality and client satisfaction.",
+    "stats": [
+      {
+        "num": "14+",
+        "label": "Years"
+      },
+      {
+        "num": "30+",
+        "label": "Projects"
+      },
+      {
+        "num": "1,200+",
+        "label": "Clients"
+      }
+    ],
+    "team": [
+      {
+        "name": "Peter Sibomana",
+        "role": "CEO & Founder",
+        "initials": "PS",
+        "image": ""
+      },
+      {
+        "name": "Nour El-Din Hassan",
+        "role": "Chief Architect",
+        "initials": "NH",
+        "image": ""
+      },
+      {
+        "name": "Dina Ramadan",
+        "role": "Head of Sales",
+        "initials": "DR",
+        "image": ""
+      },
+      {
+        "name": "Rene Ineza",
+        "role": "Lead IT",
+        "initials": "RI",
+        "bio": "",
+        "image": ""
+      }
+    ],
+    "values": [
+      {
+        "title": "Integrity",
+        "desc": "We operate with complete transparency in every transaction and project."
+      },
+      {
+        "title": "Excellence",
+        "desc": "We hold ourselves to the highest standards of quality in everything we do."
+      },
+      {
+        "title": "Innovation",
+        "desc": "We embrace modern techniques and technologies to deliver superior results."
+      },
+      {
+        "title": "Partnership",
+        "desc": "We build lasting relationships with our clients, treating their goals as our own."
+      }
+    ]
   },
   "contact": {
     "address": "Kigali, Rwanda",

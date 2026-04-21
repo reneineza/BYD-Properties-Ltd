@@ -25,9 +25,19 @@ const FIELDS = {
   about: [
     { name: 'title', label: 'Page Title', type: 'text' },
     { name: 'subtitle', label: 'Subtitle', type: 'text' },
-    { name: 'story', label: 'Our Story', type: 'textarea', rows: 5 },
+    { name: 'story', label: 'Our Story', type: 'textarea', rows: 10 },
     { name: 'mission', label: 'Mission Statement', type: 'textarea', rows: 3 },
     { name: 'vision', label: 'Vision Statement', type: 'textarea', rows: 3 },
+    {
+      name: 'stats',
+      label: 'Performance Stats',
+      type: 'array',
+      schema: [
+        { name: 'num', label: 'Number (e.g. 14+)', type: 'text' },
+        { name: 'label', label: 'Label (e.g. Years)', type: 'text' },
+      ],
+      defaultItem: { num: '', label: '' }
+    },
     {
       name: 'team',
       label: 'Team Members',
@@ -36,9 +46,10 @@ const FIELDS = {
         { name: 'name', label: 'Name', type: 'text' },
         { name: 'role', label: 'Role', type: 'text' },
         { name: 'initials', label: 'Initials', type: 'text' },
+        { name: 'bio', label: 'Bio (shown on card flip)', type: 'textarea', rows: 3 },
         { name: 'image', label: 'Profile Photo', type: 'image' },
       ],
-      defaultItem: { name: '', role: '', initials: '', image: '' }
+      defaultItem: { name: '', role: '', initials: '', bio: '', image: '' }
     },
     {
       name: 'values',

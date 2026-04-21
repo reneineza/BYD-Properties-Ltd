@@ -125,6 +125,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
               <select name="type" value={form.type} onChange={handleChange} className="input-field">
                 <option value="residential">Residential</option>
                 <option value="commercial">Commercial</option>
+                <option value="land">Land Plots</option>
               </select>
             </div>
             <div>
