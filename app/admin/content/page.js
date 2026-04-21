@@ -307,7 +307,7 @@ export default function AdminContentPage() {
                           ))}
                           {arrData.length === 0 && (
                             <div className="text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-                              <p className="text-sm text-gray-500">No items added yet. Click "Add Item" to start.</p>
+                              <p className="text-sm text-gray-500">No items added yet. Click &quot;Add Item&quot; to start.</p>
                             </div>
                           )}
                         </div>
