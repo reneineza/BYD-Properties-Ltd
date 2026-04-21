@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Save, Plus, Trash2, CheckCircle2, Home, Info, PhoneCall, Upload } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -279,7 +280,14 @@ export default function AdminContentPage() {
                                     ) : subField.type === 'image' ? (
                                       <div className="flex items-center gap-4">
                                         {item[subField.name] && (
-                                          <img src={item[subField.name]} alt="preview" className="w-12 h-12 rounded-full object-cover border border-gray-200" />
+                                          <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200">
+                                            <Image 
+                                              src={item[subField.name]} 
+                                              alt="preview" 
+                                              fill 
+                                              className="object-cover" 
+                                            />
+                                          </div>
                                         )}
                                         <label className="cursor-pointer bg-white border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 flex items-center gap-2 shadow-sm transition-colors">
                                           <Upload size={16} />

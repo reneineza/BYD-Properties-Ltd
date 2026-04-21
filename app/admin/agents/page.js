@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 const STATUS_COLORS = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -76,7 +77,14 @@ export default function AdminAgentsPage() {
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-navy rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                       {agent.photo ? (
-                        <img src={agent.photo} alt="" className="w-full h-full rounded-full object-cover" />
+                        <div className="relative w-full h-full rounded-full overflow-hidden">
+                          <Image 
+                            src={agent.photo} 
+                            alt={agent.fullName} 
+                            fill 
+                            className="object-cover" 
+                          />
+                        </div>
                       ) : (
                         agent.fullName?.[0]?.toUpperCase()
                       )}
@@ -100,9 +108,14 @@ export default function AdminAgentsPage() {
           {selected ? (
             <div className="p-8">
               <div className="flex items-start gap-6 mb-8">
-                <div className="w-20 h-20 bg-navy rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 overflow-hidden">
+                <div className="w-20 h-20 bg-navy rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 overflow-hidden relative">
                   {selected.photo ? (
-                    <img src={selected.photo} alt="" className="w-full h-full object-cover" />
+                    <Image 
+                      src={selected.photo} 
+                      alt={selected.fullName} 
+                      fill 
+                      className="object-cover" 
+                    />
                   ) : (
                     selected.fullName?.[0]?.toUpperCase()
                   )}

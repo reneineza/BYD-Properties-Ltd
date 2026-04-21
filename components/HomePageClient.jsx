@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Home, Building, Ruler, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
@@ -114,17 +115,21 @@ export default function HomePageClient({ home, featured }) {
                         transition={{ duration: 1.2, ease: "easeOut" }}
                         className="absolute inset-0"
                       >
-                        <img
+                        <Image
                           src={featured[currentSlide].images?.[0] || '/hero-apartment.png'}
                           alt={featured[currentSlide].title}
-                          className="w-full h-full object-cover transition-transform duration-[5s] ease-linear"
+                          fill
+                          className="object-cover transition-transform duration-[5s] ease-linear"
+                          priority
                         />
                       </motion.div>
                     ) : (
-                      <img
+                      <Image
                         src="/hero-apartment.png"
                         alt="Luxury Apartment"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        priority
                       />
                     )}
                   </AnimatePresence>
@@ -186,15 +191,14 @@ export default function HomePageClient({ home, featured }) {
           <AnimatedSection direction="up" delay={0.5} className="mt-16 lg:hidden">
             <div className="relative rounded-2xl overflow-hidden aspect-video shadow-2xl">
               <AnimatePresence mode="wait">
-                <motion.img
-                  key={currentSlide}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  src={featured[currentSlide]?.images?.[0] || '/hero-apartment.png'}
-                  alt="Apartment"
-                  className="w-full h-full object-cover"
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={featured[currentSlide]?.images?.[0] || '/hero-apartment.png'}
+                    alt="Apartment"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-t from-navy to-transparent opacity-50" />
               <div className="absolute bottom-4 left-4 right-4">
@@ -334,10 +338,11 @@ export default function HomePageClient({ home, featured }) {
             <AnimatedSection direction="left" delay={0.2}>
               <div className="relative z-10">
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 group">
-                  <img 
+                  <Image 
                     src="/why-byd.png" 
                     alt="Premium Quality Construction" 
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[2s]"
+                    fill
+                    className="object-cover transform group-hover:scale-105 transition-transform duration-[2s]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent opacity-40" />
                 </div>

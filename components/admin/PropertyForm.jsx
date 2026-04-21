@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const defaultValues = {
   title: '',
@@ -279,8 +280,13 @@ export default function PropertyForm({ initialValues, propertyId }) {
         {imagePreviews.length > 0 && (
           <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mt-5">
             {imagePreviews.map((url) => (
-              <div key={url} className="relative group aspect-square">
-                <img src={url} alt="" className="w-full h-full object-cover" />
+              <div key={url} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-200">
+                <Image 
+                  src={url} 
+                  alt="Property preview" 
+                  fill 
+                  className="object-cover" 
+                />
                 <button
                   type="button"
                   onClick={() => removeImage(url)}
