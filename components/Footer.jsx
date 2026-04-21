@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import BecomeAgentModal from './BecomeAgentModal';
+import SubscriptionForm from './SubscriptionForm';
 
 const footerLinks = {
   Company: [
@@ -94,7 +95,7 @@ export default function Footer() {
             </div>
 
             {/* Links */}
-            {Object.entries(footerLinks).map(([category, links]) => (
+            {Object.entries(footerLinks).slice(0, 2).map(([category, links]) => (
               <div key={category} className="flex flex-col items-center lg:items-start w-full">
                 <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-gold mb-5">
                   {category}
@@ -113,6 +114,17 @@ export default function Footer() {
                 </ul>
               </div>
             ))}
+
+            {/* Newsletter */}
+            <div className="flex flex-col items-center lg:items-start w-full">
+              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-gold mb-5">
+                Stay Updated
+              </h4>
+              <p className="text-white/55 text-sm mb-6 max-w-xs text-center lg:text-left">
+                Subscribe to get the latest property listings and real estate news delivered to your inbox.
+              </p>
+              <SubscriptionForm />
+            </div>
           </div>
 
           {/* Bottom Bar */}
