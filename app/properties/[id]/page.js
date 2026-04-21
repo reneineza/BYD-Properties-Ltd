@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
     ? property.description.slice(0, 155) + (property.description.length > 155 ? '…' : '')
     : `${property.status === 'for-sale' ? 'For sale' : 'For rent'} in ${property.location || 'Kigali'}. Contact BYD Properties for details.`;
 
-  const image = property.images?.[0] || '/logo-transparent.png';
+  const ogImage = `/api/og?title=${encodeURIComponent(property.title)}&price=${property.price || ''}&currency=${encodeURIComponent(property.currency || 'RWF')}&location=${encodeURIComponent(property.location || '')}&image=${encodeURIComponent(property.images?.[0] || '')}`;
   const canonical = `https://www.bydproperties.rw/properties/${params.id}`;
 
   return {
@@ -34,13 +34,13 @@ export async function generateMetadata({ params }) {
       description: desc,
       type: 'website',
       url: canonical,
-      images: [{ url: image, alt: property.title }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: property.title }],
     },
     twitter: {
       card: 'summary_large_image',
       title: property.title,
       description: desc,
-      images: [image],
+      images: [ogImage],
     },
     alternates: { canonical },
   };
