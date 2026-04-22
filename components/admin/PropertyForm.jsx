@@ -102,6 +102,9 @@ export default function PropertyForm({ initialValues, propertyId }) {
       agent_id: form.agent_id || null,
     };
 
+    // DEBUG: Alert immediately
+    alert(`Debug: Attempting update for "${payload.title}" with ${payload.images.length} images.`);
+
     try {
       const url = isEdit ? `/api/properties/${propertyId}` : '/api/properties';
       const method = isEdit ? 'PUT' : 'POST';
@@ -110,9 +113,6 @@ export default function PropertyForm({ initialValues, propertyId }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
-      // DEBUG: Alert the user so they can confirm what's being sent
-      alert(`Debug: Sending update for "${payload.title}" with ${payload.images.length} images.`);
 
       if (!res.ok) {
         let errorMessage = 'Failed to save';
