@@ -223,7 +223,7 @@ export default function PropertiesPage() {
               Our Properties<span className="text-gold">.</span>
             </h1>
             <p className="text-white/60 text-lg md:text-xl max-w-2xl leading-relaxed">
-              Discover Rwanda&apos;s most prestigious real estate opportunities. From luxury villas in Nyarutarama to modern commercial spaces.
+              Discover Rwanda&apos;s most prestigious real estate opportunities. From luxury villas to modern commercial spaces across the country.
             </p>
           </AnimatedSection>
         </div>
