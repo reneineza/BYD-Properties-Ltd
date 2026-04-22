@@ -57,18 +57,39 @@ export default function PropertyForm({ initialValues, propertyId }) {
     setUploading(true);
 
     const uploaded = [];
+    let failCount = 0;
+
     for (const file of files) {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch('/api/upload?context=admin', { method: 'POST', body: fd });
-      if (res.ok) {
-        const data = await res.json();
-        uploaded.push(data.url);
+      try {
+        const res = await fetch('/api/upload?context=admin', { method: 'POST', body: fd });
+        if (res.ok) {
+          const data = await res.json();
+          uploaded.push(data.url);
+        } else {
+          failCount++;
+        }
+      } catch (err) {
+        console.error('Upload catch error:', err);
+        failCount++;
       }
     }
 
-    setImagePreviews((prev) => [...prev, ...uploaded]);
-    setForm((f) => ({ ...f, images: [...(f.images || []), ...uploaded] }));
+    if (failCount > 0) {
+      alert(`Warning: ${failCount} images failed to upload.`);
+    }
+
+    if (uploaded.length > 0) {
+      setImagePreviews((prev) => [...(prev || []), ...uploaded]);
+      setForm((f) => {
+        const newImages = [...(f.images || []), ...uploaded];
+        console.log('UPDATING FORM IMAGES:', newImages);
+        return { ...f, images: newImages };
+      });
+      alert(`Success: ${uploaded.length} images uploaded and added to the list.`);
+    }
+    
     setUploading(false);
   }
 
