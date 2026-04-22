@@ -22,9 +22,18 @@ export default function AdminPropertiesPage() {
   async function handleDelete(id, title) {
     if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
     setDeleting(id);
-    await fetch(`/api/properties/${id}`, { method: 'DELETE' });
-    setProperties((prev) => prev.filter((p) => p.id !== id));
-    setDeleting(null);
+    try {
+      const res = await fetch(`/api/properties/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to delete');
+      }
+      setProperties((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      alert(`Error deleting property: ${err.message}`);
+    } finally {
+      setDeleting(null);
+    }
   }
 
   async function toggleApproval(property) {

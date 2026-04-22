@@ -65,7 +65,9 @@ export async function DELETE(request, { params }) {
   const session = await getServerSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const success = await deleteProperty(params.id);
-  if (!success) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  const result = await deleteProperty(params.id);
+  if (!result.success) {
+    return NextResponse.json({ error: result.error || 'Not found' }, { status: result.error ? 500 : 404 });
+  }
   return NextResponse.json({ success: true });
 }

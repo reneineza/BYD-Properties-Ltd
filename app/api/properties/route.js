@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 import { getProperties, createProperty, getSubscriptions } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 
-export const revalidate = 60; // Cache API response for 60s
+export const revalidate = 0; // Disable cache for properties list
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
