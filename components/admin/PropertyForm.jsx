@@ -76,18 +76,12 @@ export default function PropertyForm({ initialValues, propertyId }) {
       }
     }
 
-    if (failCount > 0) {
-      alert(`Warning: ${failCount} images failed to upload.`);
-    }
-
     if (uploaded.length > 0) {
       setImagePreviews((prev) => [...(prev || []), ...uploaded]);
       setForm((f) => {
         const newImages = [...(f.images || []), ...uploaded];
-        console.log('UPDATING FORM IMAGES:', newImages);
         return { ...f, images: newImages };
       });
-      alert(`Success: ${uploaded.length} images uploaded and added to the list.`);
     }
     
     setUploading(false);
@@ -122,9 +116,6 @@ export default function PropertyForm({ initialValues, propertyId }) {
       images: form.images,
       agent_id: form.agent_id || null,
     };
-
-    // DEBUG: Alert immediately
-    alert(`Debug: Attempting update for "${payload.title}" with ${payload.images.length} images.`);
 
     try {
       const url = isEdit ? `/api/properties/${propertyId}` : '/api/properties';
