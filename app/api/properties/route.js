@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { getProperties, createProperty, getSubscriptions } from '@/lib/db';
 import { getServerSession } from 'next-auth';
+import { revalidatePath } from 'next/cache';
 
 export const revalidate = 0; // Disable cache for properties list
 
@@ -99,5 +100,7 @@ export async function POST(request) {
     })();
   }
 
+  revalidatePath('/');
+  revalidatePath('/properties');
   return NextResponse.json(property, { status: 201 });
 }

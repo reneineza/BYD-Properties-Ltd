@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { getPropertyById, updateProperty, deleteProperty, getSubscriptions } from '@/lib/db';
 import { getServerSession } from 'next-auth';
+import { revalidatePath } from 'next/cache';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -58,6 +59,8 @@ export async function PUT(request, { params }) {
     })();
   }
 
+  revalidatePath('/');
+  revalidatePath('/properties');
   return NextResponse.json(updated);
 }
 
@@ -75,5 +78,7 @@ export async function DELETE(request, { params }) {
   if (!result.success) {
     return NextResponse.json({ error: result.error || 'Not found' }, { status: result.error ? 500 : 404 });
   }
+  revalidatePath('/');
+  revalidatePath('/properties');
   return NextResponse.json({ success: true });
 }
