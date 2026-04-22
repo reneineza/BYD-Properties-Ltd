@@ -65,6 +65,12 @@ export async function DELETE(request, { params }) {
   const session = await getServerSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json({ 
+      error: 'Admin key missing. Please add SUPABASE_SERVICE_ROLE_KEY to your Vercel/Environment settings.' 
+    }, { status: 500 });
+  }
+
   const result = await deleteProperty(params.id);
   if (!result.success) {
     return NextResponse.json({ error: result.error || 'Not found' }, { status: result.error ? 500 : 404 });
