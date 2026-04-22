@@ -15,7 +15,7 @@ const defaultValues = {
   bathrooms: '',
   area: '',
   description: '',
-  youtubeUrl: '',
+  youtube_url: '',
   featured: false,
   images: [],
   agent_id: '',
@@ -93,7 +93,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
       bathrooms: Number(form.bathrooms) || 0,
       area: Number(form.area) || 0,
       description: form.description,
-      youtubeUrl: form.youtubeUrl || null,
+      youtube_url: form.youtube_url || null,
       featured: form.featured,
       images: form.images,
       agent_id: form.agent_id || null,
@@ -275,18 +275,18 @@ export default function PropertyForm({ initialValues, propertyId }) {
         <div className="mt-8 pt-8 border-t border-gray-100">
           <label className="label">Property Video (YouTube URL)</label>
           <input
-            name="youtubeUrl"
-            value={form.youtubeUrl || ''}
+            name="youtube_url"
+            value={form.youtube_url || ''}
             onChange={handleChange}
             placeholder="e.g. https://www.youtube.com/watch?v=..."
             className="input-field"
           />
-          {getYouTubeId(form.youtubeUrl) && (
+          {getYouTubeId(form.youtube_url) && (
             <div className="mt-4 rounded-xl overflow-hidden aspect-video border border-gray-200">
               <iframe
                 width="100%"
                 height="100%"
-                src={`https://www.youtube.com/embed/${getYouTubeId(form.youtubeUrl)}`}
+                src={`https://www.youtube.com/embed/${getYouTubeId(form.youtube_url)}`}
                 title="YouTube Video Preview"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
