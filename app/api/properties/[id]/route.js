@@ -24,6 +24,10 @@ export async function PUT(request, { params }) {
     }
 
     const data = await request.json();
+    console.log('--- PUT /api/properties/[id] ---');
+    console.log('ID:', params.id);
+    console.log('IMAGES RECEIVED:', data.images);
+    
     const oldProperty = await getPropertyById(params.id);
     
     const updated = await updateProperty(params.id, data);

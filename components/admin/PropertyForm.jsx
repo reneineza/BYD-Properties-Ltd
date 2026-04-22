@@ -112,7 +112,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
       });
 
       // DEBUG: Alert the user so they can confirm what's being sent
-      // alert(`Saving property with ${payload.images.length} images.`);
+      alert(`Debug: Sending update for "${payload.title}" with ${payload.images.length} images.`);
 
       if (!res.ok) {
         let errorMessage = 'Failed to save';
