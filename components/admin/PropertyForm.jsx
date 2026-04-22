@@ -83,11 +83,19 @@ export default function PropertyForm({ initialValues, propertyId }) {
     setError('');
 
     const payload = {
-      ...form,
+      title: form.title,
+      type: form.type,
+      status: form.status,
       price: Number(form.price),
+      currency: form.currency,
+      location: form.location,
       bedrooms: Number(form.bedrooms) || 0,
       bathrooms: Number(form.bathrooms) || 0,
       area: Number(form.area) || 0,
+      description: form.description,
+      youtubeUrl: form.youtubeUrl || null,
+      featured: form.featured,
+      images: form.images,
       agent_id: form.agent_id || null,
     };
 
@@ -100,11 +108,14 @@ export default function PropertyForm({ initialValues, propertyId }) {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error('Failed to save');
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to save');
+      }
       router.push('/admin/properties');
       router.refresh();
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
