@@ -9,7 +9,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import { neighborhoods } from '@/lib/neighborhoods';
 
 const TYPES = ['all', 'residential', 'commercial', 'land'];
-const STATUSES = ['all', 'for-sale', 'for-rent'];
+const STATUSES = ['all', 'for-sale', 'for-rent', 'under-construction'];
 const LOCATIONS = ['all', ...Object.values(neighborhoods).map(n => n.name.toLowerCase())];
 
 function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
