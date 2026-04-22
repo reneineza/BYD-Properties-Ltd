@@ -18,7 +18,7 @@ export async function GET(request) {
     console.log('GET /api/properties', { type, status, location, featured });
 
     // If public user, only show approved
-    const onlyApproved = true;
+    const onlyApproved = false;
     let properties = await getProperties(null, onlyApproved);
 
     if (type && type !== 'all') {

@@ -39,7 +39,7 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
             {label}
           </p>
           <p className="text-xs font-bold uppercase tracking-wide truncate max-w-[120px]">
-            {value === 'all' ? `All ${label}s` : value.replace('-', ' ')}
+            {value === 'all' ? (label === 'Status' ? 'All Status' : `All ${label}s`) : value.replace('-', ' ')}
           </p>
         </div>
         <ChevronDown className={`w-4 h-4 transition-transform duration-500 ${isOpen ? 'rotate-180 text-gold' : 'text-navy/20'}`} />
@@ -68,7 +68,9 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
                       : 'text-navy hover:bg-gold/10 hover:text-gold'
                   }`}
                 >
-                  {opt === 'land' ? 'Land Plot' : opt.replace('-', ' ')}
+                  {opt === 'all' 
+                    ? (label === 'Status' ? 'All Status' : `All ${label}s`)
+                    : (opt === 'land' ? 'Land Plot' : opt.replace('-', ' '))}
                   {value === opt && (
                     <motion.div layoutId="active-check" className="w-1.5 h-1.5 rounded-full bg-gold" />
                   )}
