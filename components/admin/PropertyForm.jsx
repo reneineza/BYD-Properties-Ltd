@@ -73,8 +73,11 @@ export default function PropertyForm({ initialValues, propertyId }) {
   }
 
   function removeImage(url) {
-    setImagePreviews((prev) => prev.filter((u) => u !== url));
-    setForm((f) => ({ ...f, images: f.images.filter((u) => u !== url) }));
+    setImagePreviews((prev) => (prev || []).filter((u) => u !== url));
+    setForm((f) => ({ 
+      ...f, 
+      images: (f.images || []).filter((u) => u !== url) 
+    }));
   }
 
   async function handleSubmit(e) {
@@ -107,6 +110,9 @@ export default function PropertyForm({ initialValues, propertyId }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+
+      // DEBUG: Alert the user so they can confirm what's being sent
+      // alert(`Saving property with ${payload.images.length} images.`);
 
       if (!res.ok) {
         let errorMessage = 'Failed to save';
