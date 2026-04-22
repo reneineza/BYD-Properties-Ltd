@@ -109,8 +109,15 @@ export default function PropertyForm({ initialValues, propertyId }) {
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to save');
+        let errorMessage = 'Failed to save';
+        try {
+          const errorData = await res.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          // If not JSON, use status text or generic message
+          errorMessage = `Error ${res.status}: ${res.statusText || 'Server Error'}`;
+        }
+        throw new Error(errorMessage);
       }
       router.push('/admin/properties');
       router.refresh();
