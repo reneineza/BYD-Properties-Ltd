@@ -4,9 +4,11 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PropertyCard from '@/components/PropertyCard';
 import AnimatedSection from '@/components/AnimatedSection';
+import { neighborhoods } from '@/lib/neighborhoods';
 
 const TYPES = ['all', 'residential', 'commercial', 'land'];
 const STATUSES = ['all', 'for-sale', 'for-rent'];
+const LOCATIONS = ['all', ...Object.values(neighborhoods).map(n => n.name.toLowerCase())];
 
 function PropertiesContent() {
   const searchParams = useSearchParams();
@@ -14,17 +16,19 @@ function PropertiesContent() {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState(searchParams.get('type') || 'all');
   const [status, setStatus] = useState(searchParams.get('status') || 'all');
+  const [location, setLocation] = useState(searchParams.get('location') || 'all');
 
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams();
     if (type !== 'all') params.set('type', type);
     if (status !== 'all') params.set('status', status);
+    if (location !== 'all') params.set('location', location);
     fetch(`/api/properties?${params}`)
       .then((r) => r.json())
       .then((data) => { setProperties(data); setLoading(false); })
       .catch(() => setLoading(false));
-  }, [type, status]);
+  }, [type, status, location]);
 
   return (
     <>
@@ -63,6 +67,24 @@ function PropertiesContent() {
                   }`}
                 >
                   {s.replace('-', ' ')}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs uppercase tracking-widest font-bold text-navy">Location:</span>
+            <div className="flex gap-2">
+              {LOCATIONS.map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLocation(l)}
+                  className={`text-xs px-4 py-2 uppercase tracking-wide font-semibold transition-all duration-200 ${
+                    location === l
+                      ? 'bg-navy-light text-white'
+                      : 'border border-navy/20 text-navy hover:border-navy'
+                  }`}
+                >
+                  {l}
                 </button>
               ))}
             </div>

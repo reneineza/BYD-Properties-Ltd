@@ -5,30 +5,44 @@ import { getServerSession } from 'next-auth';
 
 export const revalidate = 60; // Cache API response for 60s
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function GET(request) {
-  const session = await getServerSession();
-  const { searchParams } = new URL(request.url);
-  const type = searchParams.get('type');
-  const status = searchParams.get('status');
-  const featured = searchParams.get('featured');
+  try {
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type');
+    const status = searchParams.get('status');
+    const location = searchParams.get('location');
+    const featured = searchParams.get('featured');
 
-  // If public user, only show approved
-  const onlyApproved = !session;
-  let properties = await getProperties(null, onlyApproved);
+    console.log('GET /api/properties', { type, status, location, featured });
 
-  if (type && type !== 'all') {
-    properties = properties.filter((p) => p.type === type);
-  }
-  if (status && status !== 'all') {
-    properties = properties.filter((p) => p.status === status);
-  }
-  if (featured === 'true') {
-    properties = properties.filter((p) => p.featured);
-  }
+    // If public user, only show approved
+    const onlyApproved = true;
+    let properties = await getProperties(null, onlyApproved);
 
-  return NextResponse.json(properties);
+    if (type && type !== 'all') {
+      properties = properties.filter((p) => p.type === type);
+    }
+    if (status && status !== 'all') {
+      properties = properties.filter((p) => p.status === status);
+    }
+    if (location && location !== 'all') {
+      properties = properties.filter((p) => 
+        p.location?.toLowerCase().includes(location.toLowerCase())
+      );
+    }
+    if (featured === 'true') {
+      properties = properties.filter((p) => p.featured);
+    }
+
+    console.log('Returning properties count:', properties.length);
+
+    return NextResponse.json(properties);
+  } catch (error) {
+    console.error('API Error in /api/properties:', error);
+    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
+  }
 }
 
 export async function POST(request) {
