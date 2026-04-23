@@ -16,8 +16,8 @@ export default async function AdminDashboard() {
   const unread = inquiries.filter((i) => !i.read).length;
   const pendingAgents = agents.filter((a) => a.status === 'pending').length;
   const pendingProperties = properties.filter((p) => !p.is_approved).length;
-  const forSale = properties.filter((p) => p.status === 'for-sale' && p.is_approved).length;
-  const forRent = properties.filter((p) => p.status === 'for-rent' && p.is_approved).length;
+  const forSale = properties.filter((p) => (p.status === 'for-sale' || p.status === 'for-sale-and-rent') && p.is_approved).length;
+  const forRent = properties.filter((p) => (p.status === 'for-rent' || p.status === 'for-sale-and-rent') && p.is_approved).length;
 
   const stats = [
     {

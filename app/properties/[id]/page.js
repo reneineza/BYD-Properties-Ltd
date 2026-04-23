@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
 
   const desc = property.description
     ? property.description.slice(0, 155) + (property.description.length > 155 ? '…' : '')
-    : `${property.status === 'for-sale' ? 'For sale' : 'For rent'} in ${property.location || 'Kigali'}. Contact BYD Properties for details.`;
+    : `${property.status === 'for-sale-and-rent' ? 'For sale & rent' : property.status === 'for-sale' ? 'For sale' : 'For rent'} in ${property.location || 'Kigali'}. Contact BYD Properties for details.`;
 
   const ogImage = `/api/og?title=${encodeURIComponent(property.title)}&price=${property.price || ''}&currency=${encodeURIComponent(property.currency || 'RWF')}&location=${encodeURIComponent(property.location || '')}&image=${encodeURIComponent(property.images?.[0] || '')}`;
   const canonical = `https://www.bydproperties.rw/properties/${params.id}`;
@@ -80,9 +80,18 @@ export default async function PropertyPage({ params }) {
     }),
   };
 
-  const { title, type, status, price, currency, location, bedrooms, bathrooms, area, description, images, youtubeUrl } = property;
-  const statusLabel = status === 'for-sale' ? 'For Sale' : status === 'for-rent' ? 'For Rent' : 'Under Construction';
-  const statusColor = status === 'for-sale' ? 'bg-gold text-white' : status === 'for-rent' ? 'bg-navy text-white' : 'bg-gray-600 text-white';
+  const { title, type, status, price, price_rent, currency, location, bedrooms, bathrooms, area, description, images, youtubeUrl } = property;
+  const statusLabel = 
+    status === 'for-sale-and-rent' ? 'For Sale & Rent' :
+    status === 'for-sale' ? 'For Sale' : 
+    status === 'for-rent' ? 'For Rent' : 
+    'Under Construction';
+    
+  const statusColor = 
+    status === 'for-sale-and-rent' ? 'bg-gradient-to-r from-gold to-navy text-white' :
+    status === 'for-sale' ? 'bg-gold text-white' : 
+    status === 'for-rent' ? 'bg-navy text-white' : 
+    'bg-gray-600 text-white';
 
   return (
     <div className="pb-24">
@@ -136,9 +145,21 @@ export default async function PropertyPage({ params }) {
 
           {/* Price & Key Features */}
           <div>
-            <p className="font-display text-4xl md:text-5xl font-bold text-gold mb-10">
-              {formatPrice(price, currency)}
-            </p>
+            <div className="mb-10">
+              <p className="font-display text-4xl md:text-5xl font-bold text-gold">
+                {formatPrice(price, currency)}
+              </p>
+              {status === 'for-sale-and-rent' && price_rent && (
+                <p className="text-navy/50 text-xl font-bold mt-2">
+                  or {formatPrice(price_rent, currency)} <span className="text-sm font-normal">/ month</span>
+                </p>
+              )}
+              {status === 'for-rent' && price_rent && (
+                <p className="font-display text-4xl md:text-5xl font-bold text-navy">
+                  {formatPrice(price_rent, currency)} <span className="text-xl font-normal text-gray-400">/ month</span>
+                </p>
+              )}
+            </div>
 
             <div className="grid grid-cols-3 gap-6 py-8 border-y border-gray-100">
               {bedrooms > 0 && (

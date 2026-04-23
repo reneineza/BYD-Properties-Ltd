@@ -11,11 +11,20 @@ function formatPrice(price, currency) {
 }
 
 export default function PropertyCard({ property, index = 0 }) {
-  const { id, title, type, status, price, currency, location, bedrooms, bathrooms, area, images } =
+  const { id, title, type, status, price, price_rent, currency, location, bedrooms, bathrooms, area, images } =
     property;
 
-  const statusLabel = status === 'for-sale' ? 'For Sale' : status === 'for-rent' ? 'For Rent' : 'Under Construction';
-  const statusColor = status === 'for-sale' ? 'bg-gold text-white' : status === 'for-rent' ? 'bg-navy text-white' : 'bg-gray-800 text-white';
+  const statusLabel = 
+    status === 'for-sale-and-rent' ? 'For Sale & Rent' :
+    status === 'for-sale' ? 'For Sale' : 
+    status === 'for-rent' ? 'For Rent' : 
+    'Under Construction';
+
+  const statusColor = 
+    status === 'for-sale-and-rent' ? 'bg-gradient-to-r from-gold to-navy text-white' :
+    status === 'for-sale' ? 'bg-gold text-white' : 
+    status === 'for-rent' ? 'bg-navy text-white' : 
+    'bg-gray-800 text-white';
 
   return (
     <motion.div
@@ -43,7 +52,10 @@ export default function PropertyCard({ property, index = 0 }) {
         )}
         {/* Status Badge */}
         <span className={`absolute top-4 left-4 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-sm backdrop-blur-md border border-white/20 shadow-lg ${
-          status === 'for-sale' ? 'bg-gold/90 text-white' : status === 'for-rent' ? 'bg-navy/90 text-white' : 'bg-gray-800/90 text-white'
+          status === 'for-sale-and-rent' ? 'bg-gradient-to-r from-gold/90 to-navy/90 text-white' :
+          status === 'for-sale' ? 'bg-gold/90 text-white' : 
+          status === 'for-rent' ? 'bg-navy/90 text-white' : 
+          'bg-gray-800/90 text-white'
         }`}>
           {statusLabel}
         </span>
@@ -63,7 +75,17 @@ export default function PropertyCard({ property, index = 0 }) {
           {title}
         </h3>
 
-        <p className="text-gold font-bold text-xl mb-4">{formatPrice(price, currency)}</p>
+        <div className="mb-4">
+          <p className="text-gold font-bold text-xl">{formatPrice(price, currency)}</p>
+          {status === 'for-sale-and-rent' && price_rent && (
+            <p className="text-navy/60 text-sm font-semibold mt-1">
+              or {formatPrice(price_rent, currency)} / month
+            </p>
+          )}
+          {status === 'for-rent' && price_rent && (
+             <p className="text-navy font-bold text-xl">{formatPrice(price_rent, currency)} <span className="text-xs font-normal text-gray-400">/ month</span></p>
+          )}
+        </div>
 
         {/* Details */}
         <div className="flex items-center gap-5 text-xs text-gray-500 border-t border-gray-100 pt-4">

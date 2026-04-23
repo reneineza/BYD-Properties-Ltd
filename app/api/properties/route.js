@@ -26,7 +26,11 @@ export async function GET(request) {
       properties = properties.filter((p) => p.type === type);
     }
     if (status && status !== 'all') {
-      properties = properties.filter((p) => p.status === status);
+      properties = properties.filter((p) => 
+        p.status === status || 
+        (status === 'for-sale' && p.status === 'for-sale-and-rent') ||
+        (status === 'for-rent' && p.status === 'for-sale-and-rent')
+      );
     }
     if (location && location !== 'all') {
       properties = properties.filter((p) => 

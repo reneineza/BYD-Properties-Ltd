@@ -64,8 +64,8 @@ export default async function AnalyticsDashboard() {
   const maxInq   = Math.max(...months.map((m) => m.inquiries), 1);
 
   // ── Property status donut ────────────────────────────────────────
-  const forSale = properties.filter((p) => p.status === 'for-sale').length;
-  const forRent = properties.filter((p) => p.status === 'for-rent').length;
+  const forSale = properties.filter((p) => p.status === 'for-sale' || p.status === 'for-sale-and-rent').length;
+  const forRent = properties.filter((p) => p.status === 'for-rent' || p.status === 'for-sale-and-rent').length;
   const other   = Math.max(0, totalProperties - forSale - forRent);
   const tot     = totalProperties || 1;
   const arc     = (val) => `${(val / tot) * 100} ${100 - (val / tot) * 100}`;

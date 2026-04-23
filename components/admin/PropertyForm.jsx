@@ -19,6 +19,7 @@ const defaultValues = {
   featured: false,
   images: [],
   agent_id: '',
+  price_rent: '',
 };
 
 function getYouTubeId(url) {
@@ -115,6 +116,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
       featured: form.featured,
       images: form.images,
       agent_id: form.agent_id || null,
+      price_rent: form.price_rent ? Number(form.price_rent) : null,
     };
 
     try {
@@ -179,6 +181,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
               <select name="status" value={form.status} onChange={handleChange} className="input-field">
                 <option value="for-sale">For Sale</option>
                 <option value="for-rent">For Rent</option>
+                <option value="for-sale-and-rent">For Sale & Rent</option>
                 <option value="under-construction">Under Construction</option>
               </select>
             </div>
@@ -213,6 +216,19 @@ export default function PropertyForm({ initialValues, propertyId }) {
                 required
               />
             </div>
+            {(form.status === 'for-rent' || form.status === 'for-sale-and-rent') && (
+              <div>
+                <label className="label">Rent Price (Monthly)</label>
+                <input
+                  name="price_rent"
+                  type="number"
+                  value={form.price_rent}
+                  onChange={handleChange}
+                  placeholder="2500"
+                  className="input-field"
+                />
+              </div>
+            )}
             <div>
               <label className="label">Location *</label>
               <input
