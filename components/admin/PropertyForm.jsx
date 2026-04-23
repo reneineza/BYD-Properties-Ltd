@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Plus, Trash2, Building, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Building, ChevronLeft, ChevronRight, Loader2, Copy, Layers } from 'lucide-react';
 
 const defaultValues = {
   title: '',
@@ -40,6 +40,8 @@ export default function PropertyForm({ initialValues, propertyId }) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showBatchAdd, setShowBatchAdd] = useState(false);
+  const [batchSpecs, setBatchSpecs] = useState({ count: 5, bedrooms: '', bathrooms: '', price: '', labelPrefix: 'Unit ' });
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -167,6 +169,33 @@ export default function PropertyForm({ initialValues, propertyId }) {
       ...f,
       units: f.units.map(u => u.id === id ? { ...u, [field]: value } : u)
     }));
+  }
+
+  function duplicateUnit(unit) {
+    setForm(f => ({
+      ...f,
+      units: [
+        ...(f.units || []),
+        { ...unit, id: Date.now().toString() + Math.random(), label: `${unit.label} (Copy)` }
+      ]
+    }));
+  }
+
+  function handleBatchAdd() {
+    const newUnits = [];
+    const startNum = (form.units?.length || 0) + 1;
+    for (let i = 0; i < batchSpecs.count; i++) {
+      newUnits.push({
+        id: (Date.now() + i).toString() + Math.random(),
+        label: `${batchSpecs.labelPrefix}${startNum + i}`,
+        bedrooms: batchSpecs.bedrooms,
+        bathrooms: batchSpecs.bathrooms,
+        price: batchSpecs.price,
+        status: 'available'
+      });
+    }
+    setForm(f => ({ ...f, units: [...(f.units || []), ...newUnits] }));
+    setShowBatchAdd(false);
   }
 
   async function handleSubmit(e) {
@@ -414,15 +443,96 @@ export default function PropertyForm({ initialValues, propertyId }) {
               <Building className="w-5 h-5 text-gold" />
               Units Management
             </h2>
-            <button
-              type="button"
-              onClick={addUnit}
-              className="flex items-center gap-2 text-sm font-bold text-gold hover:text-navy transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              Add New Unit
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setShowBatchAdd(!showBatchAdd)}
+                className="flex items-center gap-2 text-sm font-bold text-navy hover:text-gold transition-colors"
+              >
+                <Layers className="w-4 h-4" />
+                Batch Add
+              </button>
+              <button
+                type="button"
+                onClick={addUnit}
+                className="flex items-center gap-2 text-sm font-bold text-gold hover:text-navy transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Add New Unit
+              </button>
+            </div>
           </div>
+
+          {showBatchAdd && (
+            <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100 animate-in fade-in slide-in-from-top-4 duration-300">
+              <h3 className="text-sm font-bold text-navy mb-4 flex items-center gap-2">
+                Quick Batch Addition
+                <span className="text-[10px] font-normal text-gray-400 font-sans uppercase tracking-wider">(Add multiple identical units)</span>
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div>
+                  <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Quantity</label>
+                  <input
+                    type="number"
+                    value={batchSpecs.count}
+                    onChange={(e) => setBatchSpecs({ ...batchSpecs, count: parseInt(e.target.value) || 1 })}
+                    className="input-field py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Label Prefix</label>
+                  <input
+                    value={batchSpecs.labelPrefix}
+                    onChange={(e) => setBatchSpecs({ ...batchSpecs, labelPrefix: e.target.value })}
+                    className="input-field py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Beds</label>
+                  <input
+                    type="number"
+                    value={batchSpecs.bedrooms}
+                    onChange={(e) => setBatchSpecs({ ...batchSpecs, bedrooms: e.target.value })}
+                    className="input-field py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Baths</label>
+                  <input
+                    type="number"
+                    value={batchSpecs.bathrooms}
+                    onChange={(e) => setBatchSpecs({ ...batchSpecs, bathrooms: e.target.value })}
+                    className="input-field py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Price</label>
+                  <input
+                    type="number"
+                    value={batchSpecs.price}
+                    onChange={(e) => setBatchSpecs({ ...batchSpecs, price: e.target.value })}
+                    className="input-field py-2 text-sm"
+                  />
+                </div>
+              </div>
+              <div className="mt-4 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowBatchAdd(false)}
+                  className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-navy transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleBatchAdd}
+                  className="px-6 py-2 bg-navy text-white text-xs font-bold rounded-lg hover:bg-gold transition-all shadow-md active:scale-95"
+                >
+                  Create {batchSpecs.count} Units
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-4">
             {(!form.units || form.units.length === 0) ? (
@@ -493,13 +603,24 @@ export default function PropertyForm({ initialValues, propertyId }) {
                           </select>
                         </td>
                         <td className="py-3 text-right pr-2">
-                          <button
-                            type="button"
-                            onClick={() => removeUnit(unit.id)}
-                            className="text-gray-300 hover:text-red-500 transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <div className="flex justify-end items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => duplicateUnit(unit)}
+                              className="text-gray-300 hover:text-gold transition-colors"
+                              title="Duplicate unit"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => removeUnit(unit.id)}
+                              className="text-gray-300 hover:text-red-500 transition-colors"
+                              title="Delete unit"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
