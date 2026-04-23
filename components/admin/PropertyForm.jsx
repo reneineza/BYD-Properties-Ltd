@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { Plus, Trash2, Building } from 'lucide-react';
 
 const defaultValues = {
   title: '',
@@ -20,6 +21,7 @@ const defaultValues = {
   images: [],
   agent_id: '',
   price_rent: '',
+  units: [],
 };
 
 function getYouTubeId(url) {
@@ -96,6 +98,30 @@ export default function PropertyForm({ initialValues, propertyId }) {
     }));
   }
 
+  function addUnit() {
+    setForm(f => ({
+      ...f,
+      units: [
+        ...(f.units || []),
+        { id: Date.now().toString(), label: '', bedrooms: '', bathrooms: '', price: '', status: 'available' }
+      ]
+    }));
+  }
+
+  function removeUnit(id) {
+    setForm(f => ({
+      ...f,
+      units: f.units.filter(u => u.id !== id)
+    }));
+  }
+
+  function updateUnit(id, field, value) {
+    setForm(f => ({
+      ...f,
+      units: f.units.map(u => u.id === id ? { ...u, [field]: value } : u)
+    }));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
@@ -117,6 +143,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
       images: form.images,
       agent_id: form.agent_id || null,
       price_rent: form.price_rent ? Number(form.price_rent) : null,
+      units: form.type === 'apartment' ? form.units : [],
     };
 
     try {
@@ -172,6 +199,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
               <label className="label">Type *</label>
               <select name="type" value={form.type} onChange={handleChange} className="input-field">
                 <option value="residential">Residential</option>
+                <option value="apartment">Apartment Building</option>
                 <option value="commercial">Commercial</option>
                 <option value="land">Land Plots</option>
               </select>
@@ -330,6 +358,114 @@ export default function PropertyForm({ initialValues, propertyId }) {
           )}
         </div>
       </div>
+
+      {/* Multi-Unit Management (Only for Apartment type) */}
+      {form.type === 'apartment' && (
+        <div className="bg-white shadow-sm border border-gray-100 p-8">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+            <h2 className="font-display font-bold text-navy text-lg flex items-center gap-2">
+              <Building className="w-5 h-5 text-gold" />
+              Units Management
+            </h2>
+            <button
+              type="button"
+              onClick={addUnit}
+              className="flex items-center gap-2 text-sm font-bold text-gold hover:text-navy transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Add New Unit
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {(!form.units || form.units.length === 0) ? (
+              <div className="text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                <p className="text-gray-400 text-sm">No units added yet. Click &quot;Add New Unit&quot; to start.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="text-[10px] uppercase tracking-widest text-gray-400 border-b border-gray-100">
+                      <th className="pb-3 pl-2">Unit Label</th>
+                      <th className="pb-3">Beds</th>
+                      <th className="pb-3">Baths</th>
+                      <th className="pb-3">Price</th>
+                      <th className="pb-3">Status</th>
+                      <th className="pb-3 text-right pr-2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {form.units.map((unit) => (
+                      <tr key={unit.id} className="group hover:bg-gray-50 transition-colors">
+                        <td className="py-3 pl-2">
+                          <input
+                            value={unit.label}
+                            onChange={(e) => updateUnit(unit.id, 'label', e.target.value)}
+                            placeholder="e.g. Apt 101"
+                            className="w-full bg-transparent border-none focus:ring-0 text-sm font-semibold text-navy p-0"
+                          />
+                        </td>
+                        <td className="py-3">
+                          <input
+                            type="number"
+                            value={unit.bedrooms}
+                            onChange={(e) => updateUnit(unit.id, 'bedrooms', e.target.value)}
+                            placeholder="0"
+                            className="w-12 bg-transparent border-none focus:ring-0 text-sm text-navy p-0"
+                          />
+                        </td>
+                        <td className="py-3">
+                          <input
+                            type="number"
+                            value={unit.bathrooms}
+                            onChange={(e) => updateUnit(unit.id, 'bathrooms', e.target.value)}
+                            placeholder="0"
+                            className="w-12 bg-transparent border-none focus:ring-0 text-sm text-navy p-0"
+                          />
+                        </td>
+                        <td className="py-3">
+                          <input
+                            type="number"
+                            value={unit.price}
+                            onChange={(e) => updateUnit(unit.id, 'price', e.target.value)}
+                            placeholder="Price"
+                            className="w-24 bg-transparent border-none focus:ring-0 text-sm text-gold font-bold p-0"
+                          />
+                        </td>
+                        <td className="py-3">
+                          <select
+                            value={unit.status}
+                            onChange={(e) => updateUnit(unit.id, 'status', e.target.value)}
+                            className="bg-transparent border-none focus:ring-0 text-[10px] font-bold uppercase tracking-wider text-navy p-0"
+                          >
+                            <option value="available">Available</option>
+                            <option value="occupied">Occupied</option>
+                            <option value="sold">Sold</option>
+                            <option value="reserved">Reserved</option>
+                          </select>
+                        </td>
+                        <td className="py-3 text-right pr-2">
+                          <button
+                            type="button"
+                            onClick={() => removeUnit(unit.id)}
+                            className="text-gray-300 hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+          <p className="text-[10px] text-gray-400 mt-4 italic">
+            Note: Units will only be saved if the property type is set to &quot;Apartment Building&quot;.
+          </p>
+        </div>
+      )}
 
       {/* Images */}
       <div className="bg-white shadow-sm border border-gray-100 p-8">

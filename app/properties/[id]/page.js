@@ -80,7 +80,7 @@ export default async function PropertyPage({ params }) {
     }),
   };
 
-  const { title, type, status, price, price_rent, currency, location, bedrooms, bathrooms, area, description, images, youtubeUrl } = property;
+  const { title, type, status, price, price_rent, currency, location, bedrooms, bathrooms, area, description, images, youtubeUrl, units } = property;
   const statusLabel = 
     status === 'for-sale-and-rent' ? 'For Sale & Rent' :
     status === 'for-sale' ? 'For Sale' : 
@@ -200,6 +200,50 @@ export default async function PropertyPage({ params }) {
               {description || 'No description provided for this property.'}
             </div>
           </div>
+
+          {/* Units Table (For Apartments) */}
+          {type === 'apartment' && units && units.length > 0 && (
+            <div>
+              <h2 className="section-title text-2xl mb-4">Available Units</h2>
+              <span className="block w-8 h-0.5 bg-gold mb-6" />
+              <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                <table className="w-full text-left">
+                  <thead className="bg-gray-50">
+                    <tr className="text-[10px] uppercase tracking-[0.2em] font-bold text-navy/40 border-b border-gray-100">
+                      <th className="py-4 px-6">Unit</th>
+                      <th className="py-4 px-6">Beds / Baths</th>
+                      <th className="py-4 px-6">Price</th>
+                      <th className="py-4 px-6">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {units.map((unit, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="py-4 px-6">
+                          <p className="font-bold text-navy">{unit.label}</p>
+                        </td>
+                        <td className="py-4 px-6">
+                          <p className="text-gray-500 text-sm">{unit.bedrooms} Bed • {unit.bathrooms} Bath</p>
+                        </td>
+                        <td className="py-4 px-6">
+                          <p className="text-gold font-bold">{formatPrice(unit.price, currency)}</p>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+                            unit.status === 'available' ? 'bg-green-100 text-green-600' : 
+                            unit.status === 'sold' ? 'bg-red-100 text-red-600' : 
+                            'bg-gray-100 text-gray-600'
+                          }`}>
+                            {unit.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
           {/* Gallery */}
           {images && images.length > 1 && (
