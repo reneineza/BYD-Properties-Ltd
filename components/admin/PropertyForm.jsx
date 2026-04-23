@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Plus, Trash2, Building } from 'lucide-react';
+import { Plus, Trash2, Building, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 
 const defaultValues = {
   title: '',
@@ -37,6 +37,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
   const [imagePreviews, setImagePreviews] = useState(initialValues?.images || []);
   const [agents, setAgents] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const fileRef = useRef(null);
@@ -57,37 +58,68 @@ export default function PropertyForm({ initialValues, propertyId }) {
   async function handleImages(e) {
     const files = Array.from(e.target.files);
     if (!files.length) return;
-    setUploading(true);
-
-    const uploaded = [];
-    let failCount = 0;
-
-    for (const file of files) {
-      const fd = new FormData();
-      fd.append('file', file);
-      try {
-        const res = await fetch('/api/upload?context=admin', { method: 'POST', body: fd });
-        if (res.ok) {
-          const data = await res.json();
-          uploaded.push(data.url);
-        } else {
-          failCount++;
-        }
-      } catch (err) {
-        console.error('Upload catch error:', err);
-        failCount++;
-      }
-    }
-
-    if (uploaded.length > 0) {
-      setImagePreviews((prev) => [...(prev || []), ...uploaded]);
-      setForm((f) => {
-        const newImages = [...(f.images || []), ...uploaded];
-        return { ...f, images: newImages };
-      });
-    }
     
-    setUploading(false);
+    setUploading(true);
+    setUploadProgress(0);
+
+    const uploadedUrls = [];
+    const totalFiles = files.length;
+    let completedFiles = 0;
+
+    const uploadFile = (file) => {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        formData.append('file', file);
+
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            // This is progress for ONE file. 
+            // We want to calculate overall progress.
+            const fileProgress = (event.loaded / event.total) * 100;
+            const overallProgress = ((completedFiles * 100) + fileProgress) / totalFiles;
+            setUploadProgress(Math.round(overallProgress));
+          }
+        });
+
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              const response = JSON.parse(xhr.responseText);
+              completedFiles++;
+              setUploadProgress(Math.round((completedFiles / totalFiles) * 100));
+              resolve(response.url);
+            } else {
+              reject(new Error('Upload failed'));
+            }
+          }
+        };
+
+        xhr.open('POST', '/api/upload?context=admin', true);
+        xhr.send(formData);
+      });
+    };
+
+    try {
+      for (const file of files) {
+        const url = await uploadFile(file);
+        uploadedUrls.push(url);
+      }
+
+      if (uploadedUrls.length > 0) {
+        setImagePreviews((prev) => [...(prev || []), ...uploadedUrls]);
+        setForm((f) => ({
+          ...f,
+          images: [...(f.images || []), ...uploadedUrls]
+        }));
+      }
+    } catch (err) {
+      console.error('Upload error:', err);
+      setError('Some images failed to upload. Please try again.');
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+    }
   }
 
   function removeImage(url) {
@@ -96,6 +128,21 @@ export default function PropertyForm({ initialValues, propertyId }) {
       ...f, 
       images: (f.images || []).filter((u) => u !== url) 
     }));
+  }
+
+  function moveImage(index, direction) {
+    const newImages = [...form.images];
+    const newPreviews = [...imagePreviews];
+    
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= newImages.length) return;
+
+    // Swap images
+    [newImages[index], newImages[targetIndex]] = [newImages[targetIndex], newImages[index]];
+    [newPreviews[index], newPreviews[targetIndex]] = [newPreviews[targetIndex], newPreviews[index]];
+
+    setForm(f => ({ ...f, images: newImages }));
+    setImagePreviews(newPreviews);
   }
 
   function addUnit() {
@@ -481,8 +528,21 @@ export default function PropertyForm({ initialValues, propertyId }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           <p className="text-sm text-gray-500 group-hover:text-navy transition-colors">
-            {uploading ? 'Uploading...' : 'Click to upload images (multiple allowed)'}
+            {uploading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin text-gold" />
+                Uploading {uploadProgress}%
+              </span>
+            ) : 'Click to upload images (multiple allowed)'}
           </p>
+          {uploading && (
+            <div className="w-64 mx-auto mt-4 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gold transition-all duration-300" 
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
+          )}
           <input
             ref={fileRef}
             type="file"
@@ -494,22 +554,57 @@ export default function PropertyForm({ initialValues, propertyId }) {
         </div>
 
         {imagePreviews.length > 0 && (
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mt-5">
-            {imagePreviews.map((url) => (
-              <div key={url} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-200">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-8">
+            {imagePreviews.map((url, index) => (
+              <div key={url} className="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all">
                 <Image 
                   src={url} 
                   alt="Property preview" 
                   fill 
-                  className="object-cover" 
+                  className="object-cover group-hover:scale-110 transition-transform duration-500" 
                 />
-                <button
-                  type="button"
-                  onClick={() => removeImage(url)}
-                  className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  ×
-                </button>
+                
+                {/* Overlay Controls */}
+                <div className="absolute inset-0 bg-navy/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => removeImage(url)}
+                      className="w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all"
+                      title="Remove image"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="flex justify-center gap-2">
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => moveImage(index, -1)}
+                        className="w-8 h-8 bg-white/90 hover:bg-white text-navy rounded-lg flex items-center justify-center shadow-lg transform hover:scale-110 transition-all"
+                        title="Move left"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                    )}
+                    {index < imagePreviews.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={() => moveImage(index, 1)}
+                        className="w-8 h-8 bg-white/90 hover:bg-white text-navy rounded-lg flex items-center justify-center shadow-lg transform hover:scale-110 transition-all"
+                        title="Move right"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Index Badge */}
+                <div className="absolute bottom-2 left-2 px-2 py-1 bg-white/80 backdrop-blur-sm text-navy text-[10px] font-bold rounded border border-navy/10 shadow-sm">
+                  #{index + 1}
+                </div>
               </div>
             ))}
           </div>
