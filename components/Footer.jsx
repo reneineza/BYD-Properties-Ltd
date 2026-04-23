@@ -88,6 +88,9 @@ export default function Footer() {
                 <a href="#" aria-label="TikTok" className="w-10 h-10 border border-white/20 flex items-center justify-center text-white/50 hover:border-gold hover:text-gold hover:-translate-y-1 transition-all duration-300 rounded-sm bg-white/5">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.2c0 1.96-.5 3.96-1.72 5.39-1.39 1.63-3.73 2.5-5.83 2.22-2.31-.31-4.32-1.92-5.18-4.11-.8-2.05-.59-4.48.55-6.38 1.17-1.95 3.4-3.32 5.62-3.36V13c-1.34.1-2.68.87-3.4 1.99-.79 1.22-.84 2.87-.21 4.17.65 1.34 2.2 2.36 3.73 2.37 1.52 0 2.92-1 3.49-2.42.34-.84.44-1.78.44-2.69V.02h-1.57z" /></svg>
                 </a>
+                <a href="#" aria-label="YouTube" className="w-10 h-10 border border-white/20 flex items-center justify-center text-white/50 hover:border-gold hover:text-gold hover:-translate-y-1 transition-all duration-300 rounded-sm bg-white/5">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" /></svg>
+                </a>
                 <a href="#" aria-label="Twitter" className="w-10 h-10 border border-white/20 flex items-center justify-center text-white/50 hover:border-gold hover:text-gold hover:-translate-y-1 transition-all duration-300 rounded-sm bg-white/5">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 </a>
