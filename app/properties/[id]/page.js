@@ -5,6 +5,8 @@ import WhatsAppLeadTrigger from '@/components/WhatsAppLeadTrigger';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Bed, Bath, Maximize, Phone } from 'lucide-react';
+import PropertyGallery from '@/components/PropertyGallery';
+import GalleryHero from '@/components/GalleryHero';
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -99,43 +101,14 @@ export default async function PropertyPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] w-full bg-navy flex items-end pb-12">
-        {images?.[0] ? (
-          <>
-            <Image
-              src={images[0]}
-              alt={title}
-              fill
-              priority
-              className="object-cover opacity-60"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/50 to-transparent" />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-navy to-navy-dark" />
-        )}
-
-        <div className="relative max-w-7xl mx-auto px-6 w-full">
-          <div className="max-w-4xl">
-            <div className="flex gap-3 mb-6">
-              <span className={`text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg ${statusColor}`}>
-                {statusLabel}
-              </span>
-              <span className="text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full bg-white/90 text-navy shadow-lg backdrop-blur-md">
-                {type}
-              </span>
-            </div>
-            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-[1.1] drop-shadow-lg">
-              {title}
-            </h1>
-            <p className="flex items-center gap-2 text-white/90 text-lg drop-shadow-md">
-              <MapPin className="w-5 h-5 text-gold" />
-              {location}
-            </p>
-          </div>
-        </div>
-      </section>
+      <GalleryHero 
+        title={title}
+        images={images}
+        location={location}
+        statusLabel={statusLabel}
+        statusColor={statusColor}
+        type={type}
+      />
 
       {/* Main Content */}
       <section className="max-w-7xl mx-auto px-6 mt-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -250,19 +223,7 @@ export default async function PropertyPage({ params }) {
             <div>
               <h2 className="section-title text-2xl mb-4">Gallery</h2>
               <span className="block w-8 h-0.5 bg-gold mb-6" />
-              <div className="grid grid-cols-2 gap-4">
-                {images.slice(1).map((img, idx) => (
-                  <div key={idx} className="aspect-[4/3] bg-gray-100 relative group overflow-hidden">
-                    <Image
-                      src={img}
-                      alt={`Gallery image ${idx + 1}`}
-                      fill
-                      sizes="(max-width: 1024px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                ))}
-              </div>
+              <PropertyGallery images={images} title={title} />
             </div>
           )}
 
