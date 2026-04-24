@@ -31,7 +31,7 @@ export default function PropertyCard({ property, index = 0 }) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, duration: 0.5, ease: 'easeOut' }}
-      className="group card overflow-hidden"
+      className="group card overflow-hidden relative"
     >
       {/* Image */}
       <div className="relative h-56 bg-cream-dark overflow-hidden">
@@ -111,7 +111,7 @@ export default function PropertyCard({ property, index = 0 }) {
 
         <Link
           href={`/properties/${id}`}
-          className="mt-6 btn-outline text-sm w-full text-center block"
+          className="mt-6 btn-outline text-sm w-full text-center block after:absolute after:inset-0 after:z-10"
         >
           View Details
         </Link>
