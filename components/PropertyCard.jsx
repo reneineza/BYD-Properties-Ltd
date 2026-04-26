@@ -33,6 +33,7 @@ export default function PropertyCard({ property, index = 0 }) {
       transition={{ delay: index * 0.08, duration: 0.5, ease: 'easeOut' }}
       className="group card overflow-hidden relative"
     >
+
       {/* Image */}
       <div className="relative h-56 bg-cream-dark overflow-hidden">
         {images?.[0] ? (
@@ -109,13 +110,19 @@ export default function PropertyCard({ property, index = 0 }) {
           )}
         </div>
 
-        <Link
-          href={`/properties/${id}`}
-          className="mt-6 btn-outline text-sm w-full text-center block after:absolute after:inset-0 after:z-10"
+        <div
+          className="mt-6 btn-outline text-sm w-full text-center block"
         >
           View Details
-        </Link>
+        </div>
       </div>
+
+      {/* Clickable Overlay moved to end to ensure it stays on top of all elements */}
+      <Link 
+        href={`/properties/${id}`} 
+        className="absolute inset-0 z-40 cursor-pointer"
+        aria-label={`View details for ${title}`}
+      />
     </motion.div>
   );
 }
