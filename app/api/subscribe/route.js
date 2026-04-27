@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Use service role key to bypass RLS for subscription management
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 import { Resend } from 'resend';
 import { randomUUID } from 'crypto';
 
@@ -15,11 +21,11 @@ export async function POST(request) {
     }
 
     // Check for existing subscription
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseAdmin
       .from('subscriptions')
       .select('*')
       .eq('email', email)
-      .single();
+      .maybeSingle();
 
     if (existing) {
       if (existing.status === 'active') {
@@ -27,7 +33,7 @@ export async function POST(request) {
       }
       // Reactivate if previously unsubscribed
       const token = randomUUID();
-      await supabase
+      await supabaseAdmin
         .from('subscriptions')
         .update({ status: 'active', unsubscribe_token: token })
         .eq('email', email);
@@ -37,7 +43,7 @@ export async function POST(request) {
 
     // Create new subscription with token
     const token = randomUUID();
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('subscriptions')
       .insert([{ email, status: 'active', unsubscribe_token: token }]);
 
@@ -142,37 +148,57 @@ function buildWelcomeEmail(email, unsubscribeUrl) {
                   </td>
                 </tr>
 
-                <!-- Feature Pills -->
+                <!-- Feature Pills (inline SVG Lucide icons: Building2, Bell, MapPin) -->
                 <tr>
                   <td style="padding:0 48px 32px;">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
+                        <!-- Building2 icon -->
                         <td width="33%" style="padding-right:8px;">
                           <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px;text-align:center;">
-                                <p style="margin:0 0 6px;font-size:22px;">🏙️</p>
-                                <p style="margin:0;font-size:12px;font-weight:600;color:#C9A84C;">Exclusive Listings</p>
+                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 12px;text-align:center;">
+                                <div style="margin:0 auto 8px;width:28px;height:28px;">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
+                                    <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+                                    <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
+                                    <path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>
+                                  </svg>
+                                </div>
+                                <p style="margin:0;font-size:11px;font-weight:600;color:#C9A84C;letter-spacing:0.05em;">EXCLUSIVE LISTINGS</p>
                               </td>
                             </tr>
                           </table>
                         </td>
+                        <!-- Bell icon -->
                         <td width="33%" style="padding:0 4px;">
                           <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px;text-align:center;">
-                                <p style="margin:0 0 6px;font-size:22px;">⚡</p>
-                                <p style="margin:0;font-size:12px;font-weight:600;color:#C9A84C;">First to Know</p>
+                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 12px;text-align:center;">
+                                <div style="margin:0 auto 8px;width:28px;height:28px;">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                                  </svg>
+                                </div>
+                                <p style="margin:0;font-size:11px;font-weight:600;color:#C9A84C;letter-spacing:0.05em;">FIRST TO KNOW</p>
                               </td>
                             </tr>
                           </table>
                         </td>
+                        <!-- MapPin icon -->
                         <td width="33%" style="padding-left:8px;">
                           <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px;text-align:center;">
-                                <p style="margin:0 0 6px;font-size:22px;">🌍</p>
-                                <p style="margin:0;font-size:12px;font-weight:600;color:#C9A84C;">Prime Locations</p>
+                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 12px;text-align:center;">
+                                <div style="margin:0 auto 8px;width:28px;height:28px;">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                  </svg>
+                                </div>
+                                <p style="margin:0;font-size:11px;font-weight:600;color:#C9A84C;letter-spacing:0.05em;">PRIME LOCATIONS</p>
                               </td>
                             </tr>
                           </table>
