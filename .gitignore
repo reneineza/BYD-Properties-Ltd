@@ -4,5 +4,14 @@ node_modules/
 .env*.local
 out/
 build/
+
+# Data files that may contain real user data
 data/pageviews.json
 data/inquiries.json
+data/agents.json
+data/properties.json
+
+# Debug scripts (contain DB access logic)
+brain/
+scripts/
+remove_bg.py
