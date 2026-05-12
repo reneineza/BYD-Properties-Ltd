@@ -28,8 +28,8 @@ export default function WhatsAppButton() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Hide on admin pages
-  if (pathname?.startsWith('/admin')) return null;
+  // Hide on app shell pages
+  if (pathname?.startsWith('/admin') || pathname?.startsWith('/agent')) return null;
 
   return (
     <>

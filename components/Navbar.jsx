@@ -88,6 +88,7 @@ export default function Navbar() {
       document.body.style.touchAction = '';
     };
   }, [menuOpen]);
+  const isAppShell = pathname?.startsWith('/admin') || pathname?.startsWith('/agent');
 
   // Close on route change
   useEffect(() => {
@@ -110,7 +111,7 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
-  if (isAdminPage) return null;
+  if (isAppShell) return null;
 
   return (
     <>

@@ -31,8 +31,8 @@ const footerLinks = {
 export default function Footer() {
   const [agentModalOpen, setAgentModalOpen] = useState(false);
   const pathname = usePathname();
-  const isAdminPage = pathname?.startsWith('/admin');
-  if (isAdminPage) return null;
+  const isAppShell = pathname?.startsWith('/admin') || pathname?.startsWith('/agent');
+  if (isAppShell) return null;
 
   return (
     <>
