@@ -4,7 +4,7 @@ import { getPropertyById, updateProperty, deleteProperty, getSubscriptions } fro
 import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function GET(request, { params }) {
   const property = await getPropertyById(params.id);
