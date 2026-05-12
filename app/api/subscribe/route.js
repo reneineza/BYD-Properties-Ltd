@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
+import { randomUUID } from 'crypto';
+import { welcomeEmailHtml } from '@/lib/emailTemplates';
 
-// Use service role key to bypass RLS for subscription management
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
-import { Resend } from 'resend';
-import { randomUUID } from 'crypto';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.bydproperties.rw';
@@ -41,7 +41,7 @@ export async function POST(request) {
       return NextResponse.json({ success: true });
     }
 
-    // Create new subscription with token
+    // New subscription
     const token = randomUUID();
     const { error } = await supabaseAdmin
       .from('subscriptions')
@@ -53,8 +53,8 @@ export async function POST(request) {
     }
 
     await sendWelcomeEmail(email, token);
-
     return NextResponse.json({ success: true });
+
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -63,9 +63,7 @@ export async function POST(request) {
 
 async function sendWelcomeEmail(email, token) {
   if (!resend) return;
-
   const unsubscribeUrl = `${SITE_URL}/api/unsubscribe?token=${token}`;
-
   try {
     await resend.emails.send({
       from: 'BYD Properties <alerts@bydproperties.rw>',
@@ -75,175 +73,9 @@ async function sendWelcomeEmail(email, token) {
         'List-Unsubscribe': `<${unsubscribeUrl}>`,
         'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
       },
-      html: buildWelcomeEmail(email, unsubscribeUrl),
+      html: welcomeEmailHtml({ email, unsubscribeUrl }),
     });
   } catch (emailErr) {
     console.error('Failed to send welcome email:', emailErr);
   }
-}
-
-function buildWelcomeEmail(email, unsubscribeUrl) {
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to BYD Properties</title>
-</head>
-<body style="margin:0;padding:0;background-color:#0B132B;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-
-  <!-- Wrapper -->
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0B132B;padding:40px 16px;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
-
-          <!-- Header / Logo -->
-          <tr>
-            <td align="center" style="padding-bottom:32px;">
-              <img src="https://www.bydproperties.rw/logo-transparent.png"
-                   alt="BYD Properties Logo"
-                   width="120"
-                   style="display:block;height:auto;" />
-            </td>
-          </tr>
-
-          <!-- Hero Card -->
-          <tr>
-            <td style="background:linear-gradient(160deg,#111827 0%,#1a2235 100%);border-radius:16px;border:1px solid rgba(201,168,76,0.25);overflow:hidden;">
-
-              <!-- Gold top bar -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td style="height:4px;background:linear-gradient(90deg,#C9A84C,#e8c96a,#C9A84C);"></td>
-                </tr>
-              </table>
-
-              <!-- Body -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td style="padding:48px 48px 0;">
-
-                    <!-- Welcome heading -->
-                    <p style="margin:0 0 8px;font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#C9A84C;">
-                      Welcome to the family
-                    </p>
-                    <h1 style="margin:0 0 24px;font-size:32px;font-weight:700;color:#ffffff;line-height:1.2;">
-                      You're in! 🏠
-                    </h1>
-
-                    <!-- Divider -->
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
-                      <tr><td style="height:1px;background:rgba(201,168,76,0.2);"></td></tr>
-                    </table>
-
-                    <p style="margin:0 0 16px;font-size:16px;color:#d1d5db;line-height:1.7;">
-                      Thank you for subscribing to <strong style="color:#ffffff;">BYD Properties</strong>. You'll now be the <strong style="color:#C9A84C;">first to know</strong> about our newest exclusive property listings across Rwanda.
-                    </p>
-
-                    <p style="margin:0 0 32px;font-size:15px;color:#9ca3af;line-height:1.7;">
-                      From luxury apartments in Kigali to prime commercial spaces, we curate only the finest properties for discerning buyers and investors.
-                    </p>
-
-                  </td>
-                </tr>
-
-                <!-- Feature Pills (inline SVG Lucide icons: Building2, Bell, MapPin) -->
-                <tr>
-                  <td style="padding:0 48px 32px;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                      <tr>
-                        <!-- Building2 icon -->
-                        <td width="33%" style="padding-right:8px;">
-                          <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                            <tr>
-                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 12px;text-align:center;">
-                                <div style="margin:0 auto 8px;width:28px;height:28px;">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
-                                    <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
-                                    <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
-                                    <path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>
-                                  </svg>
-                                </div>
-                                <p style="margin:0;font-size:11px;font-weight:600;color:#C9A84C;letter-spacing:0.05em;">EXCLUSIVE LISTINGS</p>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                        <!-- Bell icon -->
-                        <td width="33%" style="padding:0 4px;">
-                          <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                            <tr>
-                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 12px;text-align:center;">
-                                <div style="margin:0 auto 8px;width:28px;height:28px;">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-                                  </svg>
-                                </div>
-                                <p style="margin:0;font-size:11px;font-weight:600;color:#C9A84C;letter-spacing:0.05em;">FIRST TO KNOW</p>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                        <!-- MapPin icon -->
-                        <td width="33%" style="padding-left:8px;">
-                          <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                            <tr>
-                              <td style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 12px;text-align:center;">
-                                <div style="margin:0 auto 8px;width:28px;height:28px;">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-                                    <circle cx="12" cy="10" r="3"/>
-                                  </svg>
-                                </div>
-                                <p style="margin:0;font-size:11px;font-weight:600;color:#C9A84C;letter-spacing:0.05em;">PRIME LOCATIONS</p>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-
-                <!-- CTA Button -->
-                <tr>
-                  <td style="padding:0 48px 48px;text-align:center;">
-                    <a href="https://www.bydproperties.rw/properties"
-                       style="display:inline-block;background:linear-gradient(135deg,#C9A84C,#e8c96a);color:#0B132B;text-decoration:none;font-weight:700;font-size:15px;padding:16px 40px;border-radius:10px;letter-spacing:0.02em;">
-                      Browse Properties →
-                    </a>
-                  </td>
-                </tr>
-
-              </table>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="padding:32px 0 0;text-align:center;">
-              <p style="margin:0 0 8px;font-size:13px;color:#6b7280;">
-                BYD Properties Ltd · Kigali, Rwanda
-              </p>
-              <p style="margin:0 0 16px;font-size:13px;color:#6b7280;">
-                <a href="https://www.bydproperties.rw" style="color:#C9A84C;text-decoration:none;">www.bydproperties.rw</a>
-              </p>
-              <p style="margin:0;font-size:12px;color:#4b5563;line-height:1.6;">
-                You're receiving this because you subscribed at bydproperties.rw.<br/>
-                Don't want these emails? 
-                <a href="${unsubscribeUrl}" style="color:#9ca3af;text-decoration:underline;">Unsubscribe</a>
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-
-</body>
-</html>`;
 }
