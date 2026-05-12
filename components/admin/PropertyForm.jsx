@@ -345,8 +345,6 @@ export default function PropertyForm({ initialValues, propertyId, isAgent = fals
               />
             </div>
           </div>
-            </div>
-          </div>
           {!isAgent && (
             <div>
               <label className="label">Assigned Agent</label>
