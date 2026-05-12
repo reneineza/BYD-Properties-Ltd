@@ -86,7 +86,8 @@ export default function Navbar() {
     return () => {
       document.body.style.overflow = '';
       document.body.style.touchAction = '';
-  const isAdminPage = pathname?.startsWith('/admin');
+    };
+  }, [menuOpen]);
 
   // Close on route change
   useEffect(() => {
