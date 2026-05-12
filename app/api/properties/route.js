@@ -15,12 +15,13 @@ export async function GET(request) {
     const status = searchParams.get('status');
     const location = searchParams.get('location');
     const featured = searchParams.get('featured');
+    const agentId = searchParams.get('agent_id');
 
-    console.log('GET /api/properties', { type, status, location, featured });
+    console.log('GET /api/properties', { type, status, location, featured, agentId });
 
-    // If public user, only show approved
+    // If public user, only show approved (unless admin/agent fetching specifically)
     const onlyApproved = false;
-    let properties = await getProperties(null, onlyApproved);
+    let properties = await getProperties(agentId, onlyApproved);
 
     if (type && type !== 'all') {
       properties = properties.filter((p) => p.type === type);

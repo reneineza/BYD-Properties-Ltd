@@ -31,7 +31,7 @@ function getYouTubeId(url) {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
-export default function PropertyForm({ initialValues, propertyId }) {
+export default function PropertyForm({ initialValues, propertyId, isAgent = false, returnUrl = '/admin/properties' }) {
   const router = useRouter();
   const [form, setForm] = useState({ ...defaultValues, ...initialValues });
   const [imagePreviews, setImagePreviews] = useState(initialValues?.images || []);
@@ -242,7 +242,7 @@ export default function PropertyForm({ initialValues, propertyId }) {
         }
         throw new Error(errorMessage);
       }
-      router.push('/admin/properties');
+      router.push(returnUrl);
       router.refresh();
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
@@ -345,25 +345,29 @@ export default function PropertyForm({ initialValues, propertyId }) {
               />
             </div>
           </div>
-          <div>
-            <label className="label">Assigned Agent</label>
-            <select 
-              name="agent_id" 
-              value={form.agent_id || ''} 
-              onChange={handleChange} 
-              className="input-field"
-            >
-              <option value="">No Agent (Admin Only)</option>
-              {agents.map(agent => (
-                <option key={agent.id} value={agent.id}>
-                  {agent.name} ({agent.email})
-                </option>
-              ))}
-            </select>
-            <p className="text-[10px] text-gray-400 mt-2">
-              The assigned agent will be able to see and manage this property in their portal.
-            </p>
+            </div>
           </div>
+          {!isAgent && (
+            <div>
+              <label className="label">Assigned Agent</label>
+              <select 
+                name="agent_id" 
+                value={form.agent_id || ''} 
+                onChange={handleChange} 
+                className="input-field"
+              >
+                <option value="">No Agent (Admin Only)</option>
+                {agents.map(agent => (
+                  <option key={agent.id} value={agent.id}>
+                    {agent.name} ({agent.email})
+                  </option>
+                ))}
+              </select>
+              <p className="text-[10px] text-gray-400 mt-2">
+                The assigned agent will be able to see and manage this property in their portal.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

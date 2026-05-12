@@ -23,26 +23,8 @@ export default async function AgentDashboard() {
   const recentLeads = [...leads].slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Sidebar / Header */}
-      <div className="bg-navy p-6 text-white flex items-center justify-between shadow-lg">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-gold rounded-lg flex items-center justify-center font-bold text-navy">
-            {session.user.name[0]}
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Agent Workspace</h1>
-            <p className="text-xs text-white/50">{session.user.email}</p>
-          </div>
-        </div>
-        <Link href="/api/auth/signout" className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors">
-          <LogOut className="w-4 h-4" />
-          Logout
-        </Link>
-      </div>
-
-      <div className="max-w-7xl mx-auto p-8">
-        {/* Welcome */}
+    <div className="max-w-7xl mx-auto">
+      {/* Welcome */}
         <div className="mb-10">
           <h2 className="font-display text-3xl font-bold text-navy">Hello, {session.user.name}</h2>
           <p className="text-gray-500">Here is how your listings are performing.</p>
