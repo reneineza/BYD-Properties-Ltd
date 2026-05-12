@@ -52,6 +52,12 @@ export async function PUT(request, { params }) {
             name: current.name,
           }),
         }).catch(err => console.error('Rejection email failed:', err));
+
+        // Free up the email address so the user can reapply in the future without hitting the unique constraint
+        if (!current.email.includes('+rejected_')) {
+          const [localPart, domain] = current.email.split('@');
+          data.email = `${localPart}+rejected_${Date.now()}@${domain || 'deleted.local'}`;
+        }
       }
     }
   }
