@@ -54,6 +54,13 @@ export async function POST(request) {
 
     return NextResponse.json({ success: true, id: agent.id }, { status: 201 });
   } catch (err) {
+    // Postgres unique constraint violation
+    if (err.code === '23505' || err.message?.includes('agents_email_key')) {
+      return NextResponse.json(
+        { error: 'An application with this email address already exists. Please use a different email or contact us at info@bydproperties.rw.' },
+        { status: 409 }
+      );
+    }
     return NextResponse.json({ error: err.message }, { status: 409 });
   }
 }

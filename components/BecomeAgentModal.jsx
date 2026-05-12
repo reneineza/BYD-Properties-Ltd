@@ -196,7 +196,19 @@ export default function BecomeAgentModal({ open, onClose }) {
           photoUrl,
         }),
       });
-      if (!res.ok) throw new Error((await res.json()).error || 'Registration failed');
+      if (!res.ok) {
+        const errData = await res.json();
+        const msg = errData.error || 'Registration failed';
+        // If it's a duplicate email error, send back to step 1 so they can correct it
+        if (res.status === 409 && msg.toLowerCase().includes('email')) {
+          setErrors({ email: 'This email already has an application on file.' });
+          setStep(0);
+          setError(msg);
+        } else {
+          throw new Error(msg);
+        }
+        return;
+      }
       setSuccess(true);
     } catch (err) {
       setError(err.message);
@@ -256,6 +268,26 @@ export default function BecomeAgentModal({ open, onClose }) {
               ) : (
                 <form onSubmit={handleSubmit} className="px-8 py-7">
                   <StepIndicator step={step} />
+
+                  {/* Global error banner — visible on any step */}
+                  <AnimatePresence>
+                    {error && (
+                      <motion.div
+                        key="global-error"
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        className={`mb-5 flex items-start gap-3 text-sm px-4 py-3 rounded-xl border ${
+                          error.toLowerCase().includes('email')
+                            ? 'bg-amber-50 border-amber-200 text-amber-800'
+                            : 'bg-red-50 border-red-200 text-red-700'
+                        }`}
+                      >
+                        <X className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <span>{error}</span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   <AnimatePresence mode="wait">
                     {/* ── STEP 1: Personal Info ──────────────────────── */}
@@ -397,11 +429,7 @@ export default function BecomeAgentModal({ open, onClose }) {
                           </div>
                         </div>
 
-                        {error && (
-                          <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl flex items-center gap-2">
-                            <X className="w-4 h-4 flex-shrink-0" /> {error}
-                          </div>
-                        )}
+
                       </motion.div>
                     )}
                   </AnimatePresence>
