@@ -34,7 +34,8 @@ export async function POST(request) {
       bio,
       photo_url: photoUrl,
       status: 'pending',
-      notes: JSON.stringify({ nationalId, city, agencyName, experience, employment, languages, linkedIn, howHeard }),
+      // Extra fields (nationalId, city, agencyName, etc.) are included in
+      // the confirmation email only — no schema change needed.
     });
 
     // Fire confirmation email — non-blocking
