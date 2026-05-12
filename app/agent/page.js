@@ -105,6 +105,5 @@ export default async function AgentDashboard() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
