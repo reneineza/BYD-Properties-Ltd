@@ -232,7 +232,7 @@ export default function BecomeAgentModal({ open, onClose }) {
             <div className="bg-navy px-8 py-5 flex items-center justify-between">
               <div>
                 <h2 className="font-display text-xl font-bold text-white">Become an Agent</h2>
-                <p className="text-white/50 text-xs mt-0.5">Join Rwanda's leading real estate network</p>
+                <p className="text-white/50 text-xs mt-0.5">Join Rwanda&apos;s leading real estate network</p>
               </div>
               <button onClick={handleClose} aria-label="Close" className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all">
                 <X className="w-4 h-4" />
