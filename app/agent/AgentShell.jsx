@@ -7,12 +7,17 @@ import { LayoutDashboard, Home, MessageCircle, LogOut, Menu, X } from 'lucide-re
 import { useState } from 'react';
 
 export default function AgentShell({ children }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  if (!session || session.user?.role !== 'agent') {
+  if (status === 'loading') {
     return <div className="p-12 text-center text-gray-500">Loading workspace...</div>;
+  }
+
+  if (status === 'unauthenticated' || session?.user?.role !== 'agent') {
+    // Return nothing and let the Server Component layout handle the redirect
+    return <div className="hidden">{children}</div>;
   }
 
   const navItems = [

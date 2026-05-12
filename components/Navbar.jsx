@@ -86,9 +86,7 @@ export default function Navbar() {
     return () => {
       document.body.style.overflow = '';
       document.body.style.touchAction = '';
-    };
-  }, [menuOpen]);
-  const isAppShell = pathname?.startsWith('/admin') || pathname?.startsWith('/agent');
+  const isAdminPage = pathname?.startsWith('/admin');
 
   // Close on route change
   useEffect(() => {
@@ -111,7 +109,7 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
-  if (isAppShell) return null;
+  if (isAdminPage) return null;
 
   return (
     <>
