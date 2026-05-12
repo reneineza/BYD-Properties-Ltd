@@ -1,5 +1,5 @@
 import { SessionProvider } from '@/app/admin/SessionProvider';
-import AgentShell from './AgentShell';
+import AgentShell from '../AgentShell';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
