@@ -87,7 +87,7 @@ export default function AgentShell({ children }) {
         {/* Logout */}
         <div className="p-4 border-t border-white/10">
           <button
-            onClick={() => signOut({ callbackUrl: '/admin/login' })}
+            onClick={() => signOut({ callbackUrl: '/agent/login' })}
             className="w-full flex items-center gap-3 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-xl transition-colors text-sm"
           >
             <LogOut className="w-5 h-5" />

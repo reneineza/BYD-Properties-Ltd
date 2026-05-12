@@ -14,7 +14,7 @@ export default async function AgentLayout({ children }) {
   const session = await getServerSession();
 
   if (!session || session?.user?.role !== 'agent') {
-    redirect('/admin/login');
+    redirect('/agent/login');
   }
 
   return (

@@ -1,0 +1,104 @@
+'use client';
+
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+
+export default function AgentLoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+    setLoading(false);
+    if (result?.ok) {
+      router.push('/agent');
+    } else {
+      setError('Invalid email or password.');
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-navy flex items-center justify-center px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md bg-white shadow-2xl overflow-hidden rounded-sm"
+      >
+        {/* Header */}
+        <div className="bg-navy border-b border-white/10 px-10 py-12 text-center flex flex-col items-center">
+          <div className="relative w-56 h-20 mb-4">
+            <Image 
+              src="/logo-transparent.png" 
+              alt="BYD Properties Logo" 
+              fill 
+              className="object-contain drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]"
+              priority
+            />
+          </div>
+          <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Agent Portal</p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="px-10 py-10 space-y-6">
+          <div>
+            <label className="label">Email Address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@bydproperties.rw"
+              className="input-field"
+              required
+            />
+          </div>
+          <div>
+            <label className="label">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="input-field"
+              required
+            />
+          </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary w-full flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Signing in...
+              </>
+            ) : (
+              'Sign In'
+            )}
+          </button>
+        </form>
+      </motion.div>
+    </div>
+  );
+}
