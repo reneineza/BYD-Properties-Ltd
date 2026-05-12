@@ -18,6 +18,7 @@ export default async function AdminDashboard() {
   const pendingProperties = properties.filter((p) => !p.is_approved).length;
   const forSale = properties.filter((p) => (p.status === 'for-sale' || p.status === 'for-sale-and-rent') && p.is_approved).length;
   const forRent = properties.filter((p) => (p.status === 'for-rent' || p.status === 'for-sale-and-rent') && p.is_approved).length;
+  const activeProjects = properties.filter((p) => p.status === 'under-construction').length;
 
   const stats = [
     {
@@ -41,6 +42,18 @@ export default async function AdminDashboard() {
       icon: (
         <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+        </svg>
+      ),
+    },
+    {
+      label: 'Active Projects',
+      value: activeProjects,
+      sub: 'Under construction',
+      href: '/admin/projects',
+      color: 'bg-orange-500',
+      icon: (
+        <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M13.5 2.1L2 12h3v9h6v-5h2v5h6v-9h3L13.5 2.1zm0 2.69L20 10.5V19h-4v-5H8v5H4V10.5l9.5-5.71zM10 8h8l-4-4-4 4z" />
         </svg>
       ),
     },
