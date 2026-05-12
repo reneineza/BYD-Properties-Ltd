@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Phone, Lock, Building2, FileText, Camera, ChevronRight, ChevronLeft, Check, X, Star, MapPin, Globe, Briefcase, Clock, Languages } from 'lucide-react';
@@ -217,10 +217,18 @@ export default function BecomeAgentModal({ open, onClose }) {
     }
   }
 
+  useEffect(() => {
+    if (!open) {
+      const t = setTimeout(() => {
+        setForm(initial); setPhotoPreview(null);
+        setStep(0); setSuccess(false);
+        setError(''); setErrors({});
+      }, 300);
+      return () => clearTimeout(t);
+    }
+  }, [open]);
+
   function handleClose() {
-    setForm(initial); setPhotoPreview(null);
-    setStep(0); setSuccess(false);
-    setError(''); setErrors({});
     onClose();
   }
 
