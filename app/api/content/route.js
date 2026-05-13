@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getContent, updateContent } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const content = await getContent();
