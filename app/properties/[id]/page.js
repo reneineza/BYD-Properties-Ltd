@@ -82,7 +82,7 @@ export default async function PropertyPage({ params }) {
     }),
   };
 
-  const { title, type, status, price, price_rent, currency, location, bedrooms, bathrooms, area, description, images, youtubeUrl, units } = property;
+  const { title, type, status, price, price_rent, currency, location, bedrooms, bathrooms, area, description, images, youtube_url, units } = property;
   const statusLabel = 
     status === 'for-sale-and-rent' ? 'For Sale & Rent' :
     status === 'for-sale' ? 'For Sale' : 
@@ -228,7 +228,7 @@ export default async function PropertyPage({ params }) {
           )}
 
           {/* Video */}
-          {youtubeUrl && getYouTubeId(youtubeUrl) && (
+          {youtube_url && getYouTubeId(youtube_url) && (
             <div className="pt-8">
               <h2 className="section-title text-2xl mb-4">Property Video</h2>
               <span className="block w-8 h-0.5 bg-gold mb-6" />
@@ -236,7 +236,7 @@ export default async function PropertyPage({ params }) {
                 <iframe
                   width="100%"
                   height="100%"
-                  src={`https://www.youtube.com/embed/${getYouTubeId(youtubeUrl)}`}
+                  src={`https://www.youtube.com/embed/${getYouTubeId(youtube_url)}`}
                   title="Property Video"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
