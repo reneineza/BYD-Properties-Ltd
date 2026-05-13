@@ -152,11 +152,14 @@ export default function AdminContentPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(content),
       });
-      if (!res.ok) throw new Error('Failed to save');
+      if (!res.ok) {
+        const errMsg = await res.text();
+        throw new Error(`Server responded with ${res.status}: ${errMsg}`);
+      }
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     } catch (e) {
-      alert('Error saving content. Please try again.');
+      alert(`Error saving content: ${e.message}`);
       console.error(e);
     } finally {
       setSaving(false);
