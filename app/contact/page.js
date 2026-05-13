@@ -4,8 +4,8 @@ import { getContent } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-export default function ContactPage() {
-  const content = getContent();
+export default async function ContactPage() {
+  const content = await getContent();
   const contact = content.contact || {};
 
   const contactInfo = [
