@@ -146,14 +146,21 @@ export default function AdminContentPage() {
 
   async function handleSave() {
     setSaving(true);
-    await fetch('/api/content', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(content),
-    });
-    setSaving(false);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    try {
+      const res = await fetch('/api/content', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(content),
+      });
+      if (!res.ok) throw new Error('Failed to save');
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (e) {
+      alert('Error saving content. Please try again.');
+      console.error(e);
+    } finally {
+      setSaving(false);
+    }
   }
 
   const sectionData = content[activeSection] || {};
