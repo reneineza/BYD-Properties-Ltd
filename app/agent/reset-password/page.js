@@ -31,7 +31,7 @@ function ResetPasswordForm() {
       setError('Passwords do not match.');
       return;
     }
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(newPassword)) {
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(newPassword)) {
       setError('Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.');
       return;
     }

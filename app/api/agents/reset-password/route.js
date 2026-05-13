@@ -9,7 +9,7 @@ const supabaseAdmin = process.env.SUPABASE_SERVICE_ROLE_KEY
 export async function POST(request) {
   const { token, newPassword } = await request.json();
 
-  if (!token || !newPassword || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(newPassword)) {
+  if (!token || !newPassword || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(newPassword)) {
     return NextResponse.json({ error: 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.' }, { status: 400 });
   }
 

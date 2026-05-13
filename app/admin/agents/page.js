@@ -238,7 +238,7 @@ function AccountsTab({ agents, loading }) {
 
   async function resetPassword() {
     if (newPw !== confirmPw) { showToast('Passwords do not match.', 'error'); return; }
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(newPw)) { showToast('Password must be at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character.', 'error'); return; }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(newPw)) { showToast('Password must be at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character.', 'error'); return; }
     setResetting(true);
     try {
       const res = await fetch(`/api/agents/${selected.id}/reset-password`, {
@@ -451,7 +451,7 @@ function AccountsTab({ agents, loading }) {
                       const hasLower = /[a-z]/.test(newPw);
                       const hasUpper = /[A-Z]/.test(newPw);
                       const hasNum = /\d/.test(newPw);
-                      const hasSpec = /[@$!%*?&]/.test(newPw);
+                      const hasSpec = /[\W_]/.test(newPw);
                       const score = (newPw.length >= 8 ? 1 : 0) + (hasLower && hasUpper ? 1 : 0) + (hasNum ? 1 : 0) + (hasSpec ? 1 : 0);
                       
                       return (
@@ -464,7 +464,7 @@ function AccountsTab({ agents, loading }) {
                     })}
                     <span className="text-xs text-gray-400 w-16 text-right">
                       {(() => {
-                         const score = (newPw.length >= 8 ? 1 : 0) + (/[a-z]/.test(newPw) && /[A-Z]/.test(newPw) ? 1 : 0) + (/\d/.test(newPw) ? 1 : 0) + (/[@$!%*?&]/.test(newPw) ? 1 : 0);
+                         const score = (newPw.length >= 8 ? 1 : 0) + (/[a-z]/.test(newPw) && /[A-Z]/.test(newPw) ? 1 : 0) + (/\d/.test(newPw) ? 1 : 0) + (/[\W_]/.test(newPw) ? 1 : 0);
                          return score < 2 ? 'Weak' : score < 4 ? 'Fair' : 'Strong';
                       })()}
                     </span>

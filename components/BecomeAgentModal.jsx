@@ -150,7 +150,7 @@ export default function BecomeAgentModal({ open, onClose }) {
     }
     if (s === 2) {
       if (!form.bio.trim() || form.bio.trim().length < 30) errs.bio = 'Please write at least 30 characters';
-      if (!form.password || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(form.password)) errs.password = 'Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character';
+      if (!form.password || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(form.password)) errs.password = 'Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character';
       if (!form.howHeard) errs.howHeard = 'Required';
     }
     return errs;
