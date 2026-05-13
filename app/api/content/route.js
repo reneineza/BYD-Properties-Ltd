@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getContent, updateContent } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,12 @@ export async function POST(request) {
 
     const data = await request.json();
     const updated = await updateContent(data);
+    
+    // Purge the static page caches so the homepage, about page, and contact page reflect updates instantly
+    revalidatePath('/');
+    revalidatePath('/about');
+    revalidatePath('/contact');
+
     return NextResponse.json(updated);
   } catch (err) {
     console.error('Failed to save content:', err);
