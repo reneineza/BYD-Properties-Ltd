@@ -63,6 +63,28 @@ export default function PropertyForm({ initialValues, propertyId, isAgent = fals
     
     setUploading(true);
     setUploadProgress(0);
+    setError('');
+
+    // Compress image client-side before upload to stay under Vercel's 4.5MB body limit
+    const compressImage = (file) => new Promise((resolve) => {
+      const img = new window.Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const MAX_DIM = 1920;
+        let { width, height } = img;
+        if (width > MAX_DIM || height > MAX_DIM) {
+          if (width > height) { height = Math.round(height * MAX_DIM / width); width = MAX_DIM; }
+          else { width = Math.round(width * MAX_DIM / height); height = MAX_DIM; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(url);
+        canvas.toBlob((blob) => resolve(new File([blob], file.name, { type: 'image/jpeg' })), 'image/jpeg', 0.85);
+      };
+      img.src = url;
+    });
 
     const uploadedUrls = [];
     const totalFiles = files.length;
@@ -76,8 +98,6 @@ export default function PropertyForm({ initialValues, propertyId, isAgent = fals
 
         xhr.upload.addEventListener('progress', (event) => {
           if (event.lengthComputable) {
-            // This is progress for ONE file. 
-            // We want to calculate overall progress.
             const fileProgress = (event.loaded / event.total) * 100;
             const overallProgress = ((completedFiles * 100) + fileProgress) / totalFiles;
             setUploadProgress(Math.round(overallProgress));
@@ -92,7 +112,9 @@ export default function PropertyForm({ initialValues, propertyId, isAgent = fals
               setUploadProgress(Math.round((completedFiles / totalFiles) * 100));
               resolve(response.url);
             } else {
-              reject(new Error('Upload failed'));
+              let msg = 'Upload failed';
+              try { msg = JSON.parse(xhr.responseText)?.error || msg; } catch {}
+              reject(new Error(msg));
             }
           }
         };
@@ -104,7 +126,8 @@ export default function PropertyForm({ initialValues, propertyId, isAgent = fals
 
     try {
       for (const file of files) {
-        const url = await uploadFile(file);
+        const compressed = await compressImage(file);
+        const url = await uploadFile(compressed);
         uploadedUrls.push(url);
       }
 
@@ -117,12 +140,13 @@ export default function PropertyForm({ initialValues, propertyId, isAgent = fals
       }
     } catch (err) {
       console.error('Upload error:', err);
-      setError('Some images failed to upload. Please try again.');
+      setError(err.message || 'Some images failed to upload. Please try again.');
     } finally {
       setUploading(false);
       setUploadProgress(0);
     }
   }
+
 
   function removeImage(url) {
     setImagePreviews((prev) => (prev || []).filter((u) => u !== url));
