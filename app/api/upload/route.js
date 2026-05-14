@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 import { supabase } from '@/lib/supabase';
 
 export async function POST(request) {
@@ -9,7 +10,7 @@ export async function POST(request) {
   const context = searchParams.get('context'); 
 
   if (context === 'admin') {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
