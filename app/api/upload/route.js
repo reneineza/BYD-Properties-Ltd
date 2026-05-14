@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Use service role key for server-side uploads (bypasses RLS storage policies)
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export async function POST(request) {
   // Allow unauthenticated uploads only for agent profile photos (context=agent)
@@ -27,7 +33,7 @@ export async function POST(request) {
 
   // Upload to Supabase Storage
   // Make sure you have a bucket named 'properties' set to PUBLIC
-  const { data, error } = await supabase.storage
+  const { data, error } = await supabaseAdmin.storage
     .from('properties')
     .upload(filename, buffer, {
       contentType: file.type,
@@ -37,11 +43,11 @@ export async function POST(request) {
 
   if (error) {
     console.error('Supabase upload error:', error);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    return NextResponse.json({ error: 'Upload failed', details: error.message }, { status: 500 });
   }
 
   // Get Public URL
-  const { data: { publicUrl } } = supabase.storage
+  const { data: { publicUrl } } = supabaseAdmin.storage
     .from('properties')
     .getPublicUrl(filename);
 
