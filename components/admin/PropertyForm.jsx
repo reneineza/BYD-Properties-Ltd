@@ -81,7 +81,7 @@ export default function PropertyForm({ initialValues, propertyId, isAgent = fals
         canvas.height = height;
         canvas.getContext('2d').drawImage(img, 0, 0, width, height);
         URL.revokeObjectURL(url);
-        canvas.toBlob((blob) => resolve(new File([blob], file.name, { type: 'image/jpeg' })), 'image/jpeg', 0.85);
+        canvas.toBlob((blob) => resolve(new File([blob], file.name, { type: 'image/jpeg' })), 'image/jpeg', 0.92);
       };
       img.src = url;
     });
