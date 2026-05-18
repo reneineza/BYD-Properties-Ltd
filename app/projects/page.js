@@ -186,23 +186,7 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      {/* ── Stats Bar ──────────────────────────────────────── */}
-      {!loading && projects.length > 0 && (
-        <div className="bg-cream border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="flex flex-wrap gap-4"
-            >
-              <StatCard icon={HardHat} value={projects.length} label="Active Projects" />
-              <StatCard icon={MapPin} value={locations.length} label={locations.length === 1 ? 'Location' : 'Locations'} />
-              <StatCard icon={Building2} value={types.length} label="Property Types" />
-            </motion.div>
-          </div>
-        </div>
-      )}
+
 
       {/* ── Grid ───────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 py-20">
