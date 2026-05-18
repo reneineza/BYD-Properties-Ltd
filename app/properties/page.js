@@ -31,22 +31,26 @@ function getLabel(opt, label) {
 // ── Desktop hover dropdown ─────────────────────────────────────────────────
 function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
   const [open, setOpen] = useState(false);
-  const containerRef = useRef(null);
+  const buttonRef = useRef(null);
+  const panelRef = useRef(null);
   const isActive = value !== 'all';
 
-  // While the dropdown is open, watch every mouse move and ask the browser
-  // directly what element is under the cursor via elementFromPoint.
-  // Close only when the cursor is outside the entire component tree
-  // (button + absolutely-positioned panel). This is the only approach that
-  // is immune to: the button/panel gap, z-index stacking, scroll events,
-  // and animation timing races.
+  // Use getBoundingClientRect to check the cursor's actual pixel position
+  // against the visual bounds of the button and panel independently.
+  // This is immune to DOM tree relationships, stacking contexts, z-index,
+  // backdrop-blur compositing layers, and animation timing races.
   useEffect(() => {
     if (!open) return;
 
+    function inBounds(el, x, y) {
+      if (!el) return false;
+      const r = el.getBoundingClientRect();
+      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    }
+
     function onMouseMove(e) {
-      if (!containerRef.current) return;
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      if (el && !containerRef.current.contains(el)) {
+      const { clientX: x, clientY: y } = e;
+      if (!inBounds(buttonRef.current, x, y) && !inBounds(panelRef.current, x, y)) {
         setOpen(false);
       }
     }
@@ -56,8 +60,9 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
   }, [open]);
 
   return (
-    <div ref={containerRef} className="relative">
+    <div className="relative">
       <button
+        ref={buttonRef}
         type="button"
         onMouseEnter={() => setOpen(true)}
         className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl transition-all duration-200 border text-sm font-bold uppercase tracking-wide select-none ${
@@ -77,7 +82,9 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
 
       <AnimatePresence>
         {open && (
-          <div className="absolute top-full left-0 pt-2 z-50">
+          // panelRef sits on this outer div which includes the pt-2 gap,
+          // so the dead-zone between button and panel is fully covered.
+          <div ref={panelRef} className="absolute top-full left-0 pt-2 z-50">
             <motion.div
               initial={{ opacity: 0, y: 6, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
