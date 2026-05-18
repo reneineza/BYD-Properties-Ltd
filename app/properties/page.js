@@ -29,34 +29,43 @@ function getLabel(opt, label) {
 }
 
 // ── Desktop hover dropdown ─────────────────────────────────────────────────
-// Uses CSS group-hover: the browser natively tracks hover across the entire
-// group including absolutely-positioned descendants — no JS events, no timers,
-// no rendering-race conditions. Panel is always in the DOM so hover is instant.
+// Panel is ALWAYS in the DOM with pointer-events:auto so the wrapper's
+// native mouseleave never fires while cursor crosses from button → gap → panel.
+// When "closed" the panel is opacity-0 so it's invisible, but still occupies
+// its space as a live hover target. Clicks are ignored when not hovered via
+// the `isGroupHovered` ref checked in onClick.
 function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
+  const [open, setOpen] = useState(false);
   const isActive = value !== 'all';
 
   return (
-    <div className="relative group/dd">
-      {/* Trigger button — styled via CSS :hover on the group */}
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
         type="button"
         className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl transition-all duration-200 border text-sm font-bold uppercase tracking-wide select-none ${
-          isActive
+          open || isActive
             ? 'bg-navy text-white border-navy shadow-lg shadow-navy/20'
-            : 'bg-white text-navy border-navy/10 group-hover/dd:bg-navy group-hover/dd:text-white group-hover/dd:border-navy group-hover/dd:shadow-lg group-hover/dd:shadow-navy/20'
+            : 'bg-white text-navy border-navy/10 hover:border-gold hover:shadow-md'
         }`}
       >
         <Icon className="w-4 h-4 flex-shrink-0 text-gold" />
         <span className="truncate max-w-[110px]">{getLabel(value, label)}</span>
-        <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-300 group-hover/dd:rotate-180 group-hover/dd:text-gold ${isActive ? 'text-gold' : 'text-navy/30'}`} />
+        <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-300 ${
+          open ? 'rotate-180 text-gold' : isActive ? 'text-gold' : 'text-navy/30'
+        }`} />
       </button>
 
-      {/* Panel — always in the DOM; shown/hidden via CSS so hover is seamless.
-          pt-2 covers the 8px gap so the group stays hovered when crossing it. */}
-      <div className="absolute top-full left-0 pt-2 z-50
-                      opacity-0 invisible pointer-events-none
-                      group-hover/dd:opacity-100 group-hover/dd:visible group-hover/dd:pointer-events-auto
-                      transition-opacity duration-150">
+      {/* Always in the DOM with pointer-events:auto — the cursor is ALWAYS
+          over a descendant when in the gap or panel area, so onMouseLeave on
+          the wrapper never fires prematurely. opacity-0 hides it visually. */}
+      <div
+        className="absolute top-full left-0 pt-2 z-50 transition-opacity duration-150"
+        style={{ opacity: open ? 1 : 0 }}
+      >
         <div className="min-w-[200px] bg-white border border-navy/8 rounded-2xl shadow-2xl py-2 overflow-hidden">
           <div className="max-h-72 overflow-y-auto custom-scrollbar">
             {options.map((opt) => {
@@ -65,7 +74,8 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
                 <button
                   key={opt}
                   type="button"
-                  onClick={() => onChange(opt)}
+                  // Guard: only fire when dropdown is actually open
+                  onClick={() => { if (open) onChange(opt); }}
                   className={`w-full text-left px-5 py-3 text-[11px] uppercase tracking-widest font-bold transition-all duration-150 flex items-center justify-between gap-3 ${
                     selected
                       ? 'bg-navy text-white'
