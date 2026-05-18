@@ -9,7 +9,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import { neighborhoods } from '@/lib/neighborhoods';
 
 const TYPES = ['all', 'residential', 'commercial', 'land'];
-const STATUSES = ['all', 'for-sale', 'for-rent', 'under-construction'];
+const STATUSES = ['all', 'for-sale', 'for-rent'];
 const LOCATIONS = ['all', ...Object.values(neighborhoods).map((n) => n.name.toLowerCase())];
 
 const OPTION_LABELS = {
@@ -19,7 +19,6 @@ const OPTION_LABELS = {
   land: 'Land Plot',
   'for-sale': 'For Sale',
   'for-rent': 'For Rent',
-  'under-construction': 'Under Construction',
   'for-sale-and-rent': 'For Sale & Rent',
 };
 
@@ -224,7 +223,13 @@ function PropertiesContent() {
     if (location !== 'all') params.set('location', location);
     fetch(`/api/properties?${params}`)
       .then((r) => r.json())
-      .then((data) => { setProperties(data); setLoading(false); })
+      .then((data) => {
+        const filtered = Array.isArray(data)
+          ? data.filter((p) => p.status !== 'under-construction' && p.status !== 'completed')
+          : [];
+        setProperties(filtered);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, [type, status, location]);
 

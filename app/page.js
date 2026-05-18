@@ -7,7 +7,9 @@ export default async function HomePage() {
   const content = await getContent();
   const home = content?.home || {};
   const allProperties = await getProperties();
-  const featured = allProperties.filter((p) => p.featured);
+  const featured = allProperties.filter(
+    (p) => p.featured && p.status !== 'under-construction' && p.status !== 'completed'
+  );
 
   return (
     <HomePageClient home={home} featured={featured} />
