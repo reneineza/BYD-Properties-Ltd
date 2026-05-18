@@ -17,12 +17,25 @@ function getYouTubeId(url) {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
+function parseDescription(fullDescription) {
+  if (!fullDescription) return { description: '', completionDate: '' };
+  const match = fullDescription.match(/^\[Completion:\s*([^\]]+)\]\s*(.*)/s);
+  if (match) {
+    return {
+      completionDate: match[1],
+      description: match[2]
+    };
+  }
+  return { description: fullDescription, completionDate: '' };
+}
+
 export async function generateMetadata({ params }) {
   const property = await getPropertyById(params.id);
   if (!property) return { title: 'Property Not Found' };
 
-  const desc = property.description
-    ? property.description.slice(0, 155) + (property.description.length > 155 ? '…' : '')
+  const { description: cleanDesc } = parseDescription(property.description);
+  const desc = cleanDesc
+    ? cleanDesc.slice(0, 155) + (cleanDesc.length > 155 ? '…' : '')
     : `${property.status === 'for-sale-and-rent' ? 'For sale & rent' : property.status === 'for-sale' ? 'For sale' : 'For rent'} in ${property.location || 'Kigali'}. Contact BYD Properties for details.`;
 
   const ogImage = `/api/og?title=${encodeURIComponent(property.title)}&price=${property.price || ''}&currency=${encodeURIComponent(property.currency || 'RWF')}&location=${encodeURIComponent(property.location || '')}&image=${encodeURIComponent(property.images?.[0] || '')}`;
@@ -60,11 +73,13 @@ export default async function PropertyPage({ params }) {
     notFound();
   }
 
+  const { description: cleanDesc, completionDate } = parseDescription(property.description);
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
     name: property.title,
-    description: property.description,
+    description: cleanDesc,
     url: `https://www.bydproperties.rw/properties/${params.id}`,
     image: property.images?.[0] || undefined,
     address: {
@@ -82,17 +97,19 @@ export default async function PropertyPage({ params }) {
     }),
   };
 
-  const { title, type, status, price, price_rent, currency, location, bedrooms, bathrooms, area, description, images, youtube_url, units } = property;
+  const { title, type, status, price, price_rent, currency, location, bedrooms, bathrooms, area, images, youtube_url, units } = property;
   const statusLabel = 
     status === 'for-sale-and-rent' ? 'For Sale & Rent' :
     status === 'for-sale' ? 'For Sale' : 
     status === 'for-rent' ? 'For Rent' : 
+    status === 'completed' ? 'Completed Project' :
     'Under Construction';
     
   const statusColor = 
     status === 'for-sale-and-rent' ? 'bg-gradient-to-r from-gold to-navy text-white' :
     status === 'for-sale' ? 'bg-gold text-white' : 
     status === 'for-rent' ? 'bg-navy text-white' : 
+    status === 'completed' ? 'bg-green-600 text-white' :
     'bg-gray-600 text-white';
 
   return (
@@ -118,21 +135,36 @@ export default async function PropertyPage({ params }) {
 
           {/* Price & Key Features */}
           <div>
-            <div className="mb-10">
-              <p className="font-display text-4xl md:text-5xl font-bold text-gold">
-                {formatPrice(price, currency)}
-              </p>
-              {status === 'for-sale-and-rent' && price_rent && (
-                <p className="text-navy/50 text-xl font-bold mt-2">
-                  or {formatPrice(price_rent, currency)} <span className="text-sm font-normal">/ month</span>
+            {(status !== 'under-construction' && status !== 'completed') ? (
+              <div className="mb-10">
+                <p className="font-display text-4xl md:text-5xl font-bold text-gold">
+                  {formatPrice(price, currency)}
                 </p>
-              )}
-              {status === 'for-rent' && price_rent && (
-                <p className="font-display text-4xl md:text-5xl font-bold text-navy">
-                  {formatPrice(price_rent, currency)} <span className="text-xl font-normal text-gray-400">/ month</span>
-                </p>
-              )}
-            </div>
+                {status === 'for-sale-and-rent' && price_rent && (
+                  <p className="text-navy/50 text-xl font-bold mt-2">
+                    or {formatPrice(price_rent, currency)} <span className="text-sm font-normal">/ month</span>
+                  </p>
+                )}
+                {status === 'for-rent' && price_rent && (
+                  <p className="font-display text-4xl md:text-5xl font-bold text-navy">
+                    {formatPrice(price_rent, currency)} <span className="text-xl font-normal text-gray-400">/ month</span>
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="mb-10 bg-cream/50 border border-navy/5 p-6 rounded-2xl">
+                <div className="text-[10px] uppercase tracking-[0.2em] font-black text-navy/40 mb-1">Project Status</div>
+                <div className="text-2xl font-display font-bold text-navy flex items-center gap-2">
+                  <span className={`w-2.5 h-2.5 rounded-full ${status === 'completed' ? 'bg-green-500' : 'bg-gold animate-pulse'}`} />
+                  {status === 'completed' ? 'Completed Showcase' : 'Under Construction'}
+                </div>
+                {completionDate && (
+                  <div className="mt-3 text-sm text-gray-500 font-medium">
+                    {status === 'completed' ? 'Completed in' : 'Expected completion'}: <span className="text-navy font-bold">{completionDate}</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="grid grid-cols-3 gap-6 py-8 border-y border-gray-100">
               {bedrooms > 0 && (
@@ -170,7 +202,7 @@ export default async function PropertyPage({ params }) {
             <h2 className="section-title text-2xl mb-4">Property Overview</h2>
             <span className="block w-8 h-0.5 bg-gold mb-6" />
             <div className="prose prose-lg text-gray-500 whitespace-pre-wrap">
-              {description || 'No description provided for this property.'}
+              {cleanDesc || 'No description provided for this property.'}
             </div>
           </div>
 

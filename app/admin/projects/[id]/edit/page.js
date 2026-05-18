@@ -10,7 +10,7 @@ export const metadata = { title: 'Edit Construction Project' };
 export default async function EditProjectPage({ params }) {
   const project = await getPropertyById(params.id);
 
-  if (!project || project.status !== 'under-construction') {
+  if (!project || (project.status !== 'under-construction' && project.status !== 'completed')) {
     notFound();
   }
 

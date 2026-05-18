@@ -13,9 +13,22 @@ const TYPE_LABELS = {
   land: 'Land Plot',
 };
 
+function parseDescription(fullDescription) {
+  if (!fullDescription) return { description: '', completionDate: '' };
+  const match = fullDescription.match(/^\[Completion:\s*([^\]]+)\]\s*(.*)/s);
+  if (match) {
+    return {
+      completionDate: match[1],
+      description: match[2]
+    };
+  }
+  return { description: fullDescription, completionDate: '' };
+}
+
 function ProjectCard({ project, index }) {
-  const { id, title, type, location, images, area, description, created_at } = project;
+  const { id, title, type, location, images, area, description, created_at, status } = project;
   const startYear = created_at ? new Date(created_at).getFullYear() : null;
+  const { description: cleanDesc, completionDate } = parseDescription(description);
 
   return (
     <motion.div
@@ -42,8 +55,8 @@ function ProjectCard({ project, index }) {
 
         {/* Status badge */}
         <span className="absolute top-4 left-4 flex items-center gap-1.5 bg-navy/90 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-sm backdrop-blur-md border border-white/20 shadow-lg">
-          <span className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse" />
-          Under Construction
+          <span className={`w-1.5 h-1.5 rounded-full ${status === 'completed' ? 'bg-green-500' : 'bg-gold animate-pulse'}`} />
+          {status === 'completed' ? 'Completed' : 'Under Construction'}
         </span>
 
         {/* Type badge */}
@@ -65,20 +78,25 @@ function ProjectCard({ project, index }) {
           {title}
         </h3>
 
-        {description && (
+        {cleanDesc && (
           <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4">
-            {description}
+            {cleanDesc}
           </p>
         )}
 
         {/* Meta */}
         <div className="flex items-center gap-5 text-xs text-gray-400 border-t border-gray-100 pt-4">
-          {startYear && (
+          {completionDate ? (
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4 text-gold" />
+              {status === 'completed' ? 'Completed' : 'Expected'}: {completionDate}
+            </span>
+          ) : startYear ? (
             <span className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-gold" />
               Started {startYear}
             </span>
-          )}
+          ) : null}
           {area > 0 && (
             <span className="flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-gold" />
@@ -121,10 +139,13 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/properties?status=under-construction')
+    fetch('/api/properties')
       .then((r) => r.json())
       .then((data) => {
-        setProjects(Array.isArray(data) ? data : []);
+        const filtered = Array.isArray(data)
+          ? data.filter((p) => p.status === 'under-construction' || p.status === 'completed')
+          : [];
+        setProjects(filtered);
         setLoading(false);
       })
       .catch(() => setLoading(false));

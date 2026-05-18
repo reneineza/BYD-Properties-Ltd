@@ -16,6 +16,7 @@ const defaultValues = {
   featured: false,
   images: [],
   agent_id: '',
+  status: 'under-construction', // default to under construction
 };
 
 function getYouTubeId(url) {
@@ -25,9 +26,33 @@ function getYouTubeId(url) {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
+// Utility to parse out completion date tag from description
+function parseDescriptionAndCompletion(fullDescription) {
+  if (!fullDescription) return { description: '', completion_date: '' };
+  const match = fullDescription.match(/^\[Completion:\s*([^\]]+)\]\s*(.*)/s);
+  if (match) {
+    return {
+      completion_date: match[1],
+      description: match[2]
+    };
+  }
+  return { description: fullDescription, completion_date: '' };
+}
+
 export default function ProjectForm({ initialValues, projectId, returnUrl = '/admin/projects' }) {
   const router = useRouter();
-  const [form, setForm] = useState({ ...defaultValues, ...initialValues });
+  
+  // Parse description and completion date on load
+  const parsed = parseDescriptionAndCompletion(initialValues?.description);
+  
+  const [form, setForm] = useState({
+    ...defaultValues,
+    ...initialValues,
+    description: parsed.description,
+    completion_date: parsed.completion_date || initialValues?.completion_date || '',
+    status: initialValues?.status || 'under-construction',
+  });
+
   const [imagePreviews, setImagePreviews] = useState(initialValues?.images || []);
   const [agents, setAgents] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -145,24 +170,24 @@ export default function ProjectForm({ initialValues, projectId, returnUrl = '/ad
     setLoading(true);
     setError('');
 
-    // Projects are always "under-construction"; price is not applicable
+    // Prepend completion date into description field as structured data
+    const completionTag = form.completion_date ? `[Completion: ${form.completion_date}] ` : '';
+
     const payload = {
       title: form.title,
       type: form.type,
-      status: 'under-construction',
+      status: form.status, // can be 'under-construction' or 'completed'
       price: 0,
       currency: 'RWF',
       location: form.location,
       bedrooms: 0,
       bathrooms: 0,
       area: Number(form.area) || 0,
-      description: form.description,
+      description: `${completionTag}${form.description}`,
       youtube_url: form.youtube_url || null,
       featured: form.featured,
       images: form.images,
       agent_id: form.agent_id || null,
-      // Store completion date in the description prefix or a dedicated field if available
-      completion_date: form.completion_date || null,
     };
 
     try {
@@ -211,8 +236,15 @@ export default function ProjectForm({ initialValues, projectId, returnUrl = '/ad
             />
           </div>
 
-          {/* Type + Location */}
+          {/* Status + Type */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="label">Project Status *</label>
+              <select name="status" value={form.status} onChange={handleChange} className="input-field">
+                <option value="under-construction">Under Construction (Active)</option>
+                <option value="completed">Completed Project (Showcase)</option>
+              </select>
+            </div>
             <div>
               <label className="label">Project Type *</label>
               <select name="type" value={form.type} onChange={handleChange} className="input-field">
@@ -222,30 +254,20 @@ export default function ProjectForm({ initialValues, projectId, returnUrl = '/ad
                 <option value="land">Land Development</option>
               </select>
             </div>
-            <div>
-              <label className="label flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-gold" /> Location *</label>
-              <input
-                name="location"
-                value={form.location}
-                onChange={handleChange}
-                placeholder="e.g. Kicukiro, Kigali"
-                className="input-field"
-                required
-              />
-            </div>
           </div>
 
           {/* Completion Date + Area */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="label flex items-center gap-1">
-                <CalendarClock className="w-3.5 h-3.5 text-gold" /> Expected Completion
+                <CalendarClock className="w-3.5 h-3.5 text-gold" /> 
+                {form.status === 'completed' ? 'Completion Date' : 'Expected Completion'}
               </label>
               <input
                 name="completion_date"
                 value={form.completion_date || ''}
                 onChange={handleChange}
-                placeholder="e.g. Q4 2025 or December 2025"
+                placeholder={form.status === 'completed' ? "e.g. December 2024 or mid-2024" : "e.g. Q4 2025 or mid-2026"}
                 className="input-field"
               />
             </div>
@@ -259,6 +281,21 @@ export default function ProjectForm({ initialValues, projectId, returnUrl = '/ad
                 onChange={handleChange}
                 placeholder="e.g. 5000"
                 className="input-field"
+              />
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="grid grid-cols-1 gap-5">
+            <div>
+              <label className="label flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-gold" /> Location *</label>
+              <input
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                placeholder="e.g. Kicukiro, Kigali"
+                className="input-field"
+                required
               />
             </div>
           </div>

@@ -12,9 +12,12 @@ export default function AdminProjectsPage() {
   const [deleting, setDeleting] = useState(null);
 
   async function fetchProjects() {
-    const res = await fetch('/api/properties?status=under-construction');
+    const res = await fetch('/api/properties');
     const data = await res.json();
-    setProjects(Array.isArray(data) ? data : []);
+    const filtered = Array.isArray(data)
+      ? data.filter((p) => p.status === 'under-construction' || p.status === 'completed')
+      : [];
+    setProjects(filtered);
     setLoading(false);
   }
 
@@ -81,8 +84,8 @@ export default function AdminProjectsPage() {
         <div className="mb-6 flex items-start gap-3 bg-orange-50 border border-orange-100 px-5 py-4 rounded-xl text-sm text-orange-700">
           <HardHat className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <p>
-            These are all properties with status <strong>Under Construction</strong>. 
-            They appear publicly on the <strong>/projects</strong> page. You can also manage them from the{' '}
+            These are all properties with status <strong>Under Construction</strong> or <strong>Completed</strong>. 
+            They appear publicly on the <strong>/projects</strong> showcase page. You can also manage them from the{' '}
             <Link href="/admin/properties" className="underline font-medium">Properties</Link> section.
           </p>
         </div>
@@ -129,7 +132,14 @@ export default function AdminProjectsPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="font-semibold text-navy truncate max-w-xs">{p.title}</div>
-                      <div className="text-xs text-gray-400 mt-0.5">{p.location}</div>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-gray-400">{p.location}</span>
+                        <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
+                          p.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'
+                        }`}>
+                          {p.status === 'completed' ? 'Completed' : 'Building'}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-4 py-4 hidden md:table-cell">
                       <span className="inline-block text-xs uppercase tracking-wide bg-gray-100 text-gray-600 px-2 py-1 rounded">
