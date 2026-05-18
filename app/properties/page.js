@@ -31,42 +31,35 @@ function getLabel(opt, label) {
 // ── Desktop hover dropdown ─────────────────────────────────────────────────
 function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
   const [open, setOpen] = useState(false);
-  // Track hover independently for the trigger button and the dropdown panel.
-  // We only close when BOTH report the mouse has left — no timers needed.
-  const buttonHovered = useRef(false);
-  const panelHovered = useRef(false);
+  const containerRef = useRef(null);
   const isActive = value !== 'all';
 
-  function closeIfNeitherHovered() {
-    if (!buttonHovered.current && !panelHovered.current) {
-      setOpen(false);
+  // While the dropdown is open, watch every mouse move and ask the browser
+  // directly what element is under the cursor via elementFromPoint.
+  // Close only when the cursor is outside the entire component tree
+  // (button + absolutely-positioned panel). This is the only approach that
+  // is immune to: the button/panel gap, z-index stacking, scroll events,
+  // and animation timing races.
+  useEffect(() => {
+    if (!open) return;
+
+    function onMouseMove(e) {
+      if (!containerRef.current) return;
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      if (el && !containerRef.current.contains(el)) {
+        setOpen(false);
+      }
     }
-  }
 
-  function handleButtonEnter() {
-    buttonHovered.current = true;
-    setOpen(true);
-  }
-  function handleButtonLeave() {
-    buttonHovered.current = false;
-    // Tiny tick so the panel's onMouseEnter can fire first when crossing the gap
-    setTimeout(closeIfNeitherHovered, 30);
-  }
-
-  function handlePanelEnter() {
-    panelHovered.current = true;
-  }
-  function handlePanelLeave() {
-    panelHovered.current = false;
-    closeIfNeitherHovered();
-  }
+    document.addEventListener('mousemove', onMouseMove);
+    return () => document.removeEventListener('mousemove', onMouseMove);
+  }, [open]);
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       <button
         type="button"
-        onMouseEnter={handleButtonEnter}
-        onMouseLeave={handleButtonLeave}
+        onMouseEnter={() => setOpen(true)}
         className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl transition-all duration-200 border text-sm font-bold uppercase tracking-wide select-none ${
           open || isActive
             ? 'bg-navy text-white border-navy shadow-lg shadow-navy/20'
@@ -84,11 +77,7 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
 
       <AnimatePresence>
         {open && (
-          <div
-            className="absolute top-full left-0 pt-2 z-50"
-            onMouseEnter={handlePanelEnter}
-            onMouseLeave={handlePanelLeave}
-          >
+          <div className="absolute top-full left-0 pt-2 z-50">
             <motion.div
               initial={{ opacity: 0, y: 6, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
