@@ -40,8 +40,8 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
   }
 
   function handleMouseLeave() {
-    // Small delay so the user can move from button → dropdown without it closing
-    closeTimer.current = setTimeout(() => setOpen(false), 120);
+    // Generous delay so the user can move from button → dropdown without it closing
+    closeTimer.current = setTimeout(() => setOpen(false), 300);
   }
 
   // Cleanup on unmount
@@ -72,34 +72,36 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.97 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute top-full left-0 mt-2 min-w-[200px] bg-white border border-navy/8 rounded-2xl shadow-2xl z-50 py-2 overflow-hidden"
-          >
-            <div className="max-h-72 overflow-y-auto custom-scrollbar">
-              {options.map((opt) => {
-                const selected = value === opt;
-                return (
-                  <button
-                    key={opt}
-                    type="button"
-                    onClick={() => { onChange(opt); setOpen(false); }}
-                    className={`w-full text-left px-5 py-3 text-[11px] uppercase tracking-widest font-bold transition-all duration-150 flex items-center justify-between gap-3 ${
-                      selected
-                        ? 'bg-navy text-white'
-                        : 'text-navy hover:bg-gold/10 hover:text-gold'
-                    }`}
-                  >
-                    {getLabel(opt, label)}
-                    {selected && <Check className="w-3.5 h-3.5 text-gold flex-shrink-0" />}
-                  </button>
-                );
-              })}
-            </div>
-          </motion.div>
+          <div className="absolute top-full left-0 pt-2 z-50">
+            <motion.div
+              initial={{ opacity: 0, y: 6, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 6, scale: 0.97 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+              className="min-w-[200px] bg-white border border-navy/8 rounded-2xl shadow-2xl py-2 overflow-hidden"
+            >
+              <div className="max-h-72 overflow-y-auto custom-scrollbar">
+                {options.map((opt) => {
+                  const selected = value === opt;
+                  return (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => { onChange(opt); setOpen(false); }}
+                      className={`w-full text-left px-5 py-3 text-[11px] uppercase tracking-widest font-bold transition-all duration-150 flex items-center justify-between gap-3 ${
+                        selected
+                          ? 'bg-navy text-white'
+                          : 'text-navy hover:bg-gold/10 hover:text-gold'
+                      }`}
+                    >
+                      {getLabel(opt, label)}
+                      {selected && <Check className="w-3.5 h-3.5 text-gold flex-shrink-0" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
