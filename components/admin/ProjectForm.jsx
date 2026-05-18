@@ -27,6 +27,12 @@ function getYouTubeId(url) {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
+function isPdfFile(url) {
+  if (!url) return false;
+  const cleanUrl = url.split('?')[0].toLowerCase();
+  return cleanUrl.endsWith('.pdf');
+}
+
 // Utility to parse out completion date & drawings tags from description in an order-independent way
 function parseDescriptionAndDetails(fullDescription) {
   if (!fullDescription) return { description: '', completion_date: '', drawings: [] };
@@ -530,51 +536,63 @@ export default function ProjectForm({ initialValues, projectId, returnUrl = '/ad
                 <Loader2 className="w-4 h-4 animate-spin text-gold" />
                 Uploading {drawingsProgress}%
               </span>
-            ) : 'Click to upload blueprints, floor plans, or architectural elevations (images)'}
+            ) : 'Click to upload blueprints, floor plans, or architectural elevations (images & PDFs)'}
           </p>
           {uploadingDrawings && (
             <div className="w-64 mx-auto mt-4 h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div className="h-full bg-gold transition-all duration-300" style={{ width: `${drawingsProgress}%` }} />
             </div>
           )}
-          <input ref={drawingsFileRef} type="file" accept="image/*" multiple onChange={handleDrawings} className="hidden" />
+          <input ref={drawingsFileRef} type="file" accept="image/*,application/pdf" multiple onChange={handleDrawings} className="hidden" />
         </div>
 
         {drawingPreviews.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-8">
-            {drawingPreviews.map((url, index) => (
-              <div key={url} className="relative group aspect-[4/3] rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all">
-                <Image src={url} alt="Architectural drawing preview" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-navy/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
-                  <div className="flex justify-end">
-                    <button type="button" onClick={() => removeDrawing(url)}
-                      className="w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all"
-                      title="Remove drawing">
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+            {drawingPreviews.map((url, index) => {
+              const isPdf = isPdfFile(url);
+              return (
+                <div key={url} className="relative group aspect-[4/3] rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center bg-gray-50">
+                  {isPdf ? (
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
+                      <FileText className="w-10 h-10 text-red-500" />
+                      <span className="text-[10px] font-bold text-navy uppercase tracking-wider truncate max-w-full">
+                        PDF Document
+                      </span>
+                    </div>
+                  ) : (
+                    <Image src={url} alt="Architectural drawing preview" fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                  )}
+                  <div className="absolute inset-0 bg-navy/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                    <div className="flex justify-end">
+                      <button type="button" onClick={() => removeDrawing(url)}
+                        className="w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all"
+                        title="Remove drawing">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <div className="flex justify-center gap-2">
+                      {index > 0 && (
+                        <button type="button" onClick={() => moveDrawing(index, -1)}
+                          className="w-8 h-8 bg-white/90 hover:bg-white text-navy rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+                          title="Move left">
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                      )}
+                      {index < drawingPreviews.length - 1 && (
+                        <button type="button" onClick={() => moveDrawing(index, 1)}
+                          className="w-8 h-8 bg-white/90 hover:bg-white text-navy rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-all"
+                          title="Move right">
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex justify-center gap-2">
-                    {index > 0 && (
-                      <button type="button" onClick={() => moveDrawing(index, -1)}
-                        className="w-8 h-8 bg-white/90 hover:bg-white text-navy rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-all"
-                        title="Move left">
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
-                    )}
-                    {index < drawingPreviews.length - 1 && (
-                      <button type="button" onClick={() => moveDrawing(index, 1)}
-                        className="w-8 h-8 bg-white/90 hover:bg-white text-navy rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-all"
-                        title="Move right">
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                    )}
+                  <div className="absolute bottom-2 left-2 px-2 py-1 bg-white/80 backdrop-blur-sm text-navy text-[10px] font-bold rounded border border-navy/10 shadow-sm">
+                    Drawing #{index + 1}
                   </div>
                 </div>
-                <div className="absolute bottom-2 left-2 px-2 py-1 bg-white/80 backdrop-blur-sm text-navy text-[10px] font-bold rounded border border-navy/10 shadow-sm">
-                  Drawing #{index + 1}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

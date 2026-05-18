@@ -4,7 +4,7 @@ import PropertyInquiryForm from '@/components/PropertyInquiryForm';
 import WhatsAppLeadTrigger from '@/components/WhatsAppLeadTrigger';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Bed, Bath, Maximize, Phone } from 'lucide-react';
+import { MapPin, Bed, Bath, Maximize, Phone, FileText } from 'lucide-react';
 import PropertyGallery from '@/components/PropertyGallery';
 import GalleryHero from '@/components/GalleryHero';
 
@@ -227,30 +227,47 @@ export default async function PropertyPage({ params }) {
               <h2 className="section-title text-2xl mb-4">Architectural Drawings &amp; Plans</h2>
               <span className="block w-8 h-0.5 bg-gold mb-6" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {drawings.map((url, idx) => (
-                  <div key={idx} className="group relative rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300">
-                    <div className="relative aspect-[4/3] w-full bg-cream-dark">
-                      <Image
-                        src={url}
-                        alt={`Architectural Drawing ${idx + 1}`}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-navy/20 group-hover:bg-navy/0 transition-colors" />
+                {drawings.map((url, idx) => {
+                  const isPdf = url.split('?')[0].toLowerCase().endsWith('.pdf');
+                  return (
+                    <div key={idx} className="group relative rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between bg-gray-50">
+                      <div className="relative aspect-[4/3] w-full bg-cream-dark flex flex-col items-center justify-center">
+                        {isPdf ? (
+                          <div className="flex flex-col items-center justify-center gap-3 p-8 text-center select-none">
+                            <FileText className="w-16 h-16 text-red-500 animate-pulse" />
+                            <span className="text-sm font-black text-navy uppercase tracking-wider">
+                              Architectural PDF Document
+                            </span>
+                            <span className="text-xs text-gray-400 font-medium">
+                              Clickfullscreen below to read or download
+                            </span>
+                          </div>
+                        ) : (
+                          <>
+                            <Image
+                              src={url}
+                              alt={`Architectural Drawing ${idx + 1}`}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-navy/20 group-hover:bg-navy/0 transition-colors" />
+                          </>
+                        )}
+                      </div>
+                      <div className="p-4 bg-white border-t border-gray-50 flex items-center justify-between">
+                        <span className="text-xs font-bold text-navy uppercase tracking-wider">Drawing #{idx + 1}</span>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-gold hover:text-navy font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors"
+                        >
+                          {isPdf ? 'Open & Read PDF →' : 'Open Fullscreen →'}
+                        </a>
+                      </div>
                     </div>
-                    <div className="p-4 bg-white border-t border-gray-50 flex items-center justify-between">
-                      <span className="text-xs font-bold text-navy uppercase tracking-wider">Drawing #{idx + 1}</span>
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-gold hover:text-navy font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors"
-                      >
-                        Open Fullscreen →
-                      </a>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
