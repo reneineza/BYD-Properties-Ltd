@@ -31,30 +31,42 @@ function getLabel(opt, label) {
 // ── Desktop hover dropdown ─────────────────────────────────────────────────
 function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
   const [open, setOpen] = useState(false);
-  const closeTimer = useRef(null);
+  // Track hover independently for the trigger button and the dropdown panel.
+  // We only close when BOTH report the mouse has left — no timers needed.
+  const buttonHovered = useRef(false);
+  const panelHovered = useRef(false);
   const isActive = value !== 'all';
 
-  function handleMouseEnter() {
-    clearTimeout(closeTimer.current);
+  function closeIfNeitherHovered() {
+    if (!buttonHovered.current && !panelHovered.current) {
+      setOpen(false);
+    }
+  }
+
+  function handleButtonEnter() {
+    buttonHovered.current = true;
     setOpen(true);
   }
-
-  function handleMouseLeave() {
-    // Generous delay so the user can move from button → dropdown without it closing
-    closeTimer.current = setTimeout(() => setOpen(false), 300);
+  function handleButtonLeave() {
+    buttonHovered.current = false;
+    // Tiny tick so the panel's onMouseEnter can fire first when crossing the gap
+    setTimeout(closeIfNeitherHovered, 30);
   }
 
-  // Cleanup on unmount
-  useEffect(() => () => clearTimeout(closeTimer.current), []);
+  function handlePanelEnter() {
+    panelHovered.current = true;
+  }
+  function handlePanelLeave() {
+    panelHovered.current = false;
+    closeIfNeitherHovered();
+  }
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className="relative">
       <button
         type="button"
+        onMouseEnter={handleButtonEnter}
+        onMouseLeave={handleButtonLeave}
         className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl transition-all duration-200 border text-sm font-bold uppercase tracking-wide select-none ${
           open || isActive
             ? 'bg-navy text-white border-navy shadow-lg shadow-navy/20'
@@ -72,7 +84,11 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
 
       <AnimatePresence>
         {open && (
-          <div className="absolute top-full left-0 pt-2 z-50">
+          <div
+            className="absolute top-full left-0 pt-2 z-50"
+            onMouseEnter={handlePanelEnter}
+            onMouseLeave={handlePanelLeave}
+          >
             <motion.div
               initial={{ opacity: 0, y: 6, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
