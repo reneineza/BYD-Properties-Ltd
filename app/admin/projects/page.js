@@ -167,7 +167,7 @@ export default function AdminProjectsPage() {
                     <td className="px-4 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link
-                          href={`/admin/properties/${p.id}/edit`}
+                          href={`/admin/projects/${p.id}/edit`}
                           className="flex items-center gap-1.5 text-xs font-medium text-navy border border-navy/20 px-3 py-1.5 hover:border-navy transition-colors rounded"
                         >
                           <Pencil className="w-3 h-3" />
