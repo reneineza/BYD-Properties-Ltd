@@ -18,15 +18,30 @@ function getYouTubeId(url) {
 }
 
 function parseDescription(fullDescription) {
-  if (!fullDescription) return { description: '', completionDate: '' };
-  const match = fullDescription.match(/^\[Completion:\s*([^\]]+)\]\s*(.*)/s);
-  if (match) {
-    return {
-      completionDate: match[1],
-      description: match[2]
-    };
+  if (!fullDescription) return { description: '', completionDate: '', drawings: [] };
+  
+  let description = fullDescription;
+  let completionDate = '';
+  let drawings = [];
+  
+  let parsed = true;
+  while (parsed) {
+    parsed = false;
+    const compM = description.match(/^\[Completion:\s*([^\]]+)\]\s*(.*)/s);
+    if (compM) {
+      completionDate = compM[1];
+      description = compM[2];
+      parsed = true;
+    }
+    const drawM = description.match(/^\[Drawings:\s*([^\]]+)\]\s*(.*)/s);
+    if (drawM) {
+      drawings = drawM[1].split(',').filter(Boolean);
+      description = drawM[2];
+      parsed = true;
+    }
   }
-  return { description: fullDescription, completionDate: '' };
+  
+  return { description, completionDate, drawings };
 }
 
 export async function generateMetadata({ params }) {
@@ -73,7 +88,7 @@ export default async function PropertyPage({ params }) {
     notFound();
   }
 
-  const { description: cleanDesc, completionDate } = parseDescription(property.description);
+  const { description: cleanDesc, completionDate, drawings } = parseDescription(property.description);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -205,6 +220,40 @@ export default async function PropertyPage({ params }) {
               {cleanDesc || 'No description provided for this property.'}
             </div>
           </div>
+
+          {/* Architectural Drawings */}
+          {drawings && drawings.length > 0 && (
+            <div>
+              <h2 className="section-title text-2xl mb-4">Architectural Drawings &amp; Plans</h2>
+              <span className="block w-8 h-0.5 bg-gold mb-6" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {drawings.map((url, idx) => (
+                  <div key={idx} className="group relative rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300">
+                    <div className="relative aspect-[4/3] w-full bg-cream-dark">
+                      <Image
+                        src={url}
+                        alt={`Architectural Drawing ${idx + 1}`}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-navy/20 group-hover:bg-navy/0 transition-colors" />
+                    </div>
+                    <div className="p-4 bg-white border-t border-gray-50 flex items-center justify-between">
+                      <span className="text-xs font-bold text-navy uppercase tracking-wider">Drawing #{idx + 1}</span>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-gold hover:text-navy font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors"
+                      >
+                        Open Fullscreen →
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Units Table (For Apartments) */}
           {type === 'apartment' && units && units.length > 0 && (
