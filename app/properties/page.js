@@ -29,75 +29,57 @@ function getLabel(opt, label) {
 }
 
 // ── Desktop hover dropdown ─────────────────────────────────────────────────
+// Uses CSS group-hover: the browser natively tracks hover across the entire
+// group including absolutely-positioned descendants — no JS events, no timers,
+// no rendering-race conditions. Panel is always in the DOM so hover is instant.
 function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
-  const [open, setOpen] = useState(false);
   const isActive = value !== 'all';
 
-  // mouseleave on a parent fires only when the cursor leaves the element
-  // AND all its descendants — including absolutely-positioned children.
-  // The panel div (with pt-2 covering the gap) is a real DOM child of the
-  // wrapper, so moving button→gap→panel never triggers mouseleave.
-  // Clicks are never interrupted because we don't touch pointer events.
   return (
-    <div
-      className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
+    <div className="relative group/dd">
+      {/* Trigger button — styled via CSS :hover on the group */}
       <button
         type="button"
         className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl transition-all duration-200 border text-sm font-bold uppercase tracking-wide select-none ${
-          open || isActive
+          isActive
             ? 'bg-navy text-white border-navy shadow-lg shadow-navy/20'
-            : 'bg-white text-navy border-navy/10 hover:border-gold hover:shadow-md'
+            : 'bg-white text-navy border-navy/10 group-hover/dd:bg-navy group-hover/dd:text-white group-hover/dd:border-navy group-hover/dd:shadow-lg group-hover/dd:shadow-navy/20'
         }`}
       >
-        <Icon className={`w-4 h-4 flex-shrink-0 ${open || isActive ? 'text-gold' : 'text-gold'}`} />
+        <Icon className="w-4 h-4 flex-shrink-0 text-gold" />
         <span className="truncate max-w-[110px]">{getLabel(value, label)}</span>
-        <ChevronDown
-          className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-300 ${
-            open ? 'rotate-180 text-gold' : isActive ? 'text-gold' : 'text-navy/30'
-          }`}
-        />
+        <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-300 group-hover/dd:rotate-180 group-hover/dd:text-gold ${isActive ? 'text-gold' : 'text-navy/30'}`} />
       </button>
 
-      <AnimatePresence>
-        {open && (
-          // This div starts at top-full with pt-2, making the 8px gap
-          // between button and panel a DOM child of the wrapper —
-          // so the cursor crossing the gap never triggers onMouseLeave.
-          <div className="absolute top-full left-0 pt-2 z-50">
-            <motion.div
-              initial={{ opacity: 0, y: 6, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 6, scale: 0.97 }}
-              transition={{ duration: 0.15, ease: 'easeOut' }}
-              className="min-w-[200px] bg-white border border-navy/8 rounded-2xl shadow-2xl py-2 overflow-hidden"
-            >
-              <div className="max-h-72 overflow-y-auto custom-scrollbar">
-                {options.map((opt) => {
-                  const selected = value === opt;
-                  return (
-                    <button
-                      key={opt}
-                      type="button"
-                      onClick={() => { onChange(opt); setOpen(false); }}
-                      className={`w-full text-left px-5 py-3 text-[11px] uppercase tracking-widest font-bold transition-all duration-150 flex items-center justify-between gap-3 ${
-                        selected
-                          ? 'bg-navy text-white'
-                          : 'text-navy hover:bg-gold/10 hover:text-gold'
-                      }`}
-                    >
-                      {getLabel(opt, label)}
-                      {selected && <Check className="w-3.5 h-3.5 text-gold flex-shrink-0" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </motion.div>
+      {/* Panel — always in the DOM; shown/hidden via CSS so hover is seamless.
+          pt-2 covers the 8px gap so the group stays hovered when crossing it. */}
+      <div className="absolute top-full left-0 pt-2 z-50
+                      opacity-0 invisible pointer-events-none
+                      group-hover/dd:opacity-100 group-hover/dd:visible group-hover/dd:pointer-events-auto
+                      transition-opacity duration-150">
+        <div className="min-w-[200px] bg-white border border-navy/8 rounded-2xl shadow-2xl py-2 overflow-hidden">
+          <div className="max-h-72 overflow-y-auto custom-scrollbar">
+            {options.map((opt) => {
+              const selected = value === opt;
+              return (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => onChange(opt)}
+                  className={`w-full text-left px-5 py-3 text-[11px] uppercase tracking-widest font-bold transition-all duration-150 flex items-center justify-between gap-3 ${
+                    selected
+                      ? 'bg-navy text-white'
+                      : 'text-navy hover:bg-gold/10 hover:text-gold'
+                  }`}
+                >
+                  {getLabel(opt, label)}
+                  {selected && <Check className="w-3.5 h-3.5 text-gold flex-shrink-0" />}
+                </button>
+              );
+            })}
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }
