@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Filter, MapPin, Home, Tag, X, SlidersHorizontal, Check } from 'lucide-react';
@@ -31,40 +31,21 @@ function getLabel(opt, label) {
 // ── Desktop hover dropdown ─────────────────────────────────────────────────
 function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
   const [open, setOpen] = useState(false);
-  const buttonRef = useRef(null);
-  const panelRef = useRef(null);
   const isActive = value !== 'all';
 
-  // Use getBoundingClientRect to check the cursor's actual pixel position
-  // against the visual bounds of the button and panel independently.
-  // This is immune to DOM tree relationships, stacking contexts, z-index,
-  // backdrop-blur compositing layers, and animation timing races.
-  useEffect(() => {
-    if (!open) return;
-
-    function inBounds(el, x, y) {
-      if (!el) return false;
-      const r = el.getBoundingClientRect();
-      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
-    }
-
-    function onMouseMove(e) {
-      const { clientX: x, clientY: y } = e;
-      if (!inBounds(buttonRef.current, x, y) && !inBounds(panelRef.current, x, y)) {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener('mousemove', onMouseMove);
-    return () => document.removeEventListener('mousemove', onMouseMove);
-  }, [open]);
-
+  // mouseleave on a parent fires only when the cursor leaves the element
+  // AND all its descendants — including absolutely-positioned children.
+  // The panel div (with pt-2 covering the gap) is a real DOM child of the
+  // wrapper, so moving button→gap→panel never triggers mouseleave.
+  // Clicks are never interrupted because we don't touch pointer events.
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
-        ref={buttonRef}
         type="button"
-        onMouseEnter={() => setOpen(true)}
         className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl transition-all duration-200 border text-sm font-bold uppercase tracking-wide select-none ${
           open || isActive
             ? 'bg-navy text-white border-navy shadow-lg shadow-navy/20'
@@ -82,9 +63,10 @@ function FilterDropdown({ label, value, options, onChange, icon: Icon }) {
 
       <AnimatePresence>
         {open && (
-          // panelRef sits on this outer div which includes the pt-2 gap,
-          // so the dead-zone between button and panel is fully covered.
-          <div ref={panelRef} className="absolute top-full left-0 pt-2 z-50">
+          // This div starts at top-full with pt-2, making the 8px gap
+          // between button and panel a DOM child of the wrapper —
+          // so the cursor crossing the gap never triggers onMouseLeave.
+          <div className="absolute top-full left-0 pt-2 z-50">
             <motion.div
               initial={{ opacity: 0, y: 6, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
