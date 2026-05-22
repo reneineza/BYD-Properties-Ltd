@@ -11,7 +11,8 @@ export async function GET() {
     const content = await getContent();
     return NextResponse.json(content);
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('GET /api/content error:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -39,6 +40,6 @@ export async function POST(request) {
     return NextResponse.json(updated);
   } catch (err) {
     console.error('Failed to save content:', err);
-    return NextResponse.json({ error: err.message, details: err.toString() }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

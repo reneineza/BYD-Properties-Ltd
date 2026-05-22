@@ -47,7 +47,7 @@ export async function GET(request) {
     return NextResponse.json(properties);
   } catch (error) {
     console.error('API Error in /api/properties:', error);
-    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 

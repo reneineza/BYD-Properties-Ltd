@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { randomUUID } from 'crypto';
 import { welcomeEmailHtml } from '@/lib/emailTemplates';
+import { z } from 'zod';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -16,7 +17,9 @@ export async function POST(request) {
   try {
     const { email } = await request.json();
 
-    if (!email || !email.includes('@')) {
+    // Validate email format with zod (catches malformed addresses & header injection vectors)
+    const emailResult = z.string().email().safeParse(email);
+    if (!emailResult.success) {
       return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
     }
 

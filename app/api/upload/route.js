@@ -11,6 +11,15 @@ export const dynamic = 'force-dynamic';
 // next.config body size override for App Router API routes
 export const fetchCache = 'force-no-store';
 
+// Security: strict allowlist for uploaded image types
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const MIME_TO_EXT = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+};
+
 // Use service role key for server-side uploads (bypasses RLS storage policies)
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -43,6 +52,14 @@ export async function POST(request) {
   const file = formData.get('file');
   if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
 
+  // Security: validate MIME type against allowlist
+  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    return NextResponse.json(
+      { error: 'Invalid file type. Only JPEG, PNG, WebP, and GIF images are allowed.' },
+      { status: 400 }
+    );
+  }
+
   // Validate file size — 10MB per file to stay well within Vercel's 4.5MB limit
   const MAX_SIZE = 10 * 1024 * 1024; // 10MB
   if (file.size > MAX_SIZE) {
@@ -55,7 +72,8 @@ export async function POST(request) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const ext = file.name.split('.').pop();
+  // Security: derive extension from validated MIME type — never trust the filename
+  const ext = MIME_TO_EXT[file.type];
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
   // Upload to Supabase Storage (bucket: 'properties', must be set to PUBLIC)
