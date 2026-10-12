@@ -20,11 +20,12 @@ const MIME_TO_EXT = {
   'image/gif': 'gif',
 };
 
+import { supabase } from '@/lib/supabase';
+
 // Use service role key for server-side uploads (bypasses RLS storage policies)
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabaseAdmin = process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+  : supabase;
 
 export async function POST(request) {
   // Allow unauthenticated uploads only for agent profile photos (context=agent)

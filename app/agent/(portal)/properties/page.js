@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
@@ -11,17 +11,17 @@ export default function AgentPropertiesPage() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(null);
 
-  async function fetchProperties() {
+  const fetchProperties = useCallback(async () => {
     if (!session?.user?.id) return;
     const res = await fetch(`/api/properties?agent_id=${session.user.id}`);
     const data = await res.json();
     setProperties(data);
     setLoading(false);
-  }
+  }, [session?.user?.id]);
 
   useEffect(() => { 
     if (session) fetchProperties(); 
-  }, [session]);
+  }, [session, fetchProperties]);
 
   async function handleDelete(id, title) {
     if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
