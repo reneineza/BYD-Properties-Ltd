@@ -356,6 +356,128 @@ export default function HomePageClient({ home, featured }) {
       </section>
 
 
+      {/* ── FIND US / MAP ── */}
+      <section className="py-24 bg-cream">
+        <div className="max-w-7xl mx-auto px-6">
+          <AnimatedSection className="mb-12">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-gold mb-3">
+              Our Location
+            </p>
+            <h2 className="section-title mb-2">Find Us in Kigali</h2>
+            <span className="gold-line" />
+            <p className="text-gray-500 mt-2 max-w-lg">
+              Visit our office in Kigali, Rwanda. We&apos;d love to meet you in person and
+              discuss how we can bring your property vision to life.
+            </p>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            {/* Info Panel */}
+            <AnimatedSection direction="right" className="lg:col-span-1 space-y-6">
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex items-start gap-4 mb-6">
+                  <span className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#df9f3d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                      <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                  </span>
+                  <div>
+                    <h4 className="font-display font-bold text-navy text-sm uppercase tracking-wider mb-1">Address</h4>
+                    <p className="text-gray-500 text-sm leading-relaxed">Kigali, Rwanda</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 mb-6">
+                  <span className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#df9f3d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92Z"/>
+                    </svg>
+                  </span>
+                  <div>
+                    <h4 className="font-display font-bold text-navy text-sm uppercase tracking-wider mb-1">Phone</h4>
+                    <p className="text-gray-500 text-sm">+250 788 661 932</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 mb-6">
+                  <span className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#df9f3d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                      <rect width="20" height="16" x="2" y="4" rx="2"/>
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                  </span>
+                  <div>
+                    <h4 className="font-display font-bold text-navy text-sm uppercase tracking-wider mb-1">Email</h4>
+                    <p className="text-gray-500 text-sm">info@bydproperties.rw</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <span className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#df9f3d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </span>
+                  <div>
+                    <h4 className="font-display font-bold text-navy text-sm uppercase tracking-wider mb-1">Working Hours</h4>
+                    <p className="text-gray-500 text-sm">Mon – Fri: 9:00 AM – 6:00 PM</p>
+                  </div>
+                </div>
+              </div>
+
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=-1.9600128566295572,30.10838105230639"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary w-full text-center block"
+              >
+                Get Directions
+              </a>
+            </AnimatedSection>
+
+            {/* Map Embed with direct Google Maps click-through */}
+            <AnimatedSection direction="left" delay={0.15} className="lg:col-span-2">
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=-1.9600128566295572,30.10838105230639"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Click to open directions to BYD Properties on Google Maps"
+                className="group relative block rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-gray-200 cursor-pointer"
+                style={{ aspectRatio: '16/9', minHeight: '380px' }}
+              >
+                <iframe
+                  src="https://maps.google.com/maps?q=-1.9600128566295572,30.10838105230639&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  className="w-full h-full absolute inset-0 pointer-events-none"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  title="BYD Properties Office Location — Kigali, Rwanda"
+                />
+
+                {/* Click catcher & hover overlay */}
+                <div className="absolute inset-0 bg-navy/0 group-hover:bg-navy/10 transition-colors duration-300" />
+
+                {/* Top-Right Badge: Open in Google Maps */}
+                <div className="absolute top-4 right-4 bg-navy/90 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-lg backdrop-blur-md flex items-center gap-1.5 group-hover:bg-gold transition-colors duration-300">
+                  <span>Open in Google Maps</span>
+                  <span className="transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+                </div>
+
+                {/* Bottom-Left HQ Pin badge */}
+                <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg flex items-center gap-2.5 border border-gray-100">
+                  <span className="w-2.5 h-2.5 bg-gold rounded-full flex-shrink-0" />
+                  <div>
+                    <p className="text-navy text-xs font-bold leading-none">BYD Properties HQ</p>
+                    <p className="text-gray-400 text-[10px] mt-0.5">Click for directions</p>
+                  </div>
+                </div>
+              </a>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA BANNER ── */}
       <section className="py-20 bg-gold">
         <AnimatedSection className="max-w-3xl mx-auto px-6 text-center">

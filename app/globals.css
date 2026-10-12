@@ -115,7 +115,7 @@ body {
 /* ── Team Flip Cards ─────────────────────────────── */
 .team-flip-card {
   perspective: 1000px;
-  height: 280px;
+  height: 310px;
 }
 
 .team-flip-inner {

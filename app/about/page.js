@@ -19,10 +19,27 @@ export const metadata = {
 };
 
 const defaultTeam = [
-  { name: 'Khaled Youssef', role: 'CEO & Founder', initials: 'KY' },
-  { name: 'Nour El-Din Hassan', role: 'Chief Architect', initials: 'NH' },
-  { name: 'Dina Ramadan', role: 'Head of Sales', initials: 'DR' },
-  { name: 'Omar Gamal', role: 'Construction Director', initials: 'OG' },
+  {
+    name: 'Sibomana Peter',
+    role: 'CEO & Founder',
+    initials: 'SP',
+    bio: 'Visionary leader and founder of BYD Properties, driving excellence in Rwandan real estate and construction.',
+    image: '/team/sibomana-peter.jpg',
+  },
+  {
+    name: 'Natukunda Patience',
+    role: 'Legal Advisor',
+    initials: 'NP',
+    bio: 'Expert legal counsel ensuring every transaction, contract, and property development project meets the highest regulatory standards.',
+    image: '/team/natukunda-patience.jpg',
+  },
+  {
+    name: 'MUHIRE Blande',
+    role: 'Digital Operations Manager & Communication',
+    initials: 'MB',
+    bio: 'Leads digital strategy, technology integration, and communications to deliver an exceptional client experience.',
+    image: '/team/muhire-blande.jpg',
+  },
 ];
 
 const defaultValues = [
@@ -146,7 +163,7 @@ export default async function AboutPage() {
             <h2 className="section-title">Meet Our Team</h2>
             <p className="text-gray-400 mt-4 text-sm">Hover over a card to learn more</p>
           </AnimatedSection>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto gap-8">
             {displayTeam.map((member, i) => (
               <AnimatedSection key={member.name || i} delay={i * 0.1}>
                 <div className="team-flip-card">

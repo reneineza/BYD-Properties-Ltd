@@ -33,29 +33,25 @@
     ],
     "team": [
       {
-        "name": "Peter Sibomana",
+        "name": "Sibomana Peter",
         "role": "CEO & Founder",
-        "initials": "PS",
-        "image": ""
+        "initials": "SP",
+        "bio": "Visionary leader and founder of BYD Properties, driving excellence in Rwandan real estate and construction.",
+        "image": "/team/sibomana-peter.jpg"
       },
       {
-        "name": "Nour El-Din Hassan",
-        "role": "Chief Architect",
-        "initials": "NH",
-        "image": ""
+        "name": "Natukunda Patience",
+        "role": "Legal Advisor",
+        "initials": "NP",
+        "bio": "Expert legal counsel ensuring every transaction, contract, and property development project meets the highest regulatory standards.",
+        "image": "/team/natukunda-patience.jpg"
       },
       {
-        "name": "Dina Ramadan",
-        "role": "Head of Sales",
-        "initials": "DR",
-        "image": ""
-      },
-      {
-        "name": "Rene Ineza",
-        "role": "Lead IT",
-        "initials": "RI",
-        "bio": "",
-        "image": ""
+        "name": "MUHIRE Blande",
+        "role": "Digital Operations Manager & Communication",
+        "initials": "MB",
+        "bio": "Leads digital strategy, technology integration, and communications to deliver an exceptional client experience.",
+        "image": "/team/muhire-blande.jpg"
       }
     ],
     "values": [
