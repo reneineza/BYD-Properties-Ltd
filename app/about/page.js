@@ -60,7 +60,19 @@ export default async function AboutPage() {
   const content = await getContent();
   const about = content?.about || {};
   
-  const displayTeam = about.team && about.team.length > 0 ? about.team : defaultTeam;
+  const isLegacyTeam = (team) => {
+    if (!Array.isArray(team) || team.length === 0) return true;
+    return team.some(
+      (m) =>
+        !m.image ||
+        m.name?.toLowerCase().includes('didier') ||
+        m.name?.toLowerCase().includes('byishimo') ||
+        m.name?.toLowerCase().includes('khaled') ||
+        m.name?.toLowerCase().includes('youssef')
+    );
+  };
+
+  const displayTeam = about.team && !isLegacyTeam(about.team) ? about.team : defaultTeam;
   const displayValues = about.values && about.values.length > 0 ? about.values : defaultValues;
   const displayStats = about.stats && about.stats.length > 0 ? about.stats : [
     { num: '14+', label: 'Years' },

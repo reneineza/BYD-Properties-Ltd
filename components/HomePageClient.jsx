@@ -428,7 +428,7 @@ export default function HomePageClient({ home, featured }) {
               </div>
 
               <a
-                href="https://www.google.com/maps/dir/?api=1&destination=-1.9600128566295572,30.10838105230639"
+                href="https://maps.app.goo.gl/eQ8nB48ods2sZhvd9"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary w-full text-center block"
@@ -440,15 +440,15 @@ export default function HomePageClient({ home, featured }) {
             {/* Map Embed with direct Google Maps click-through */}
             <AnimatedSection direction="left" delay={0.15} className="lg:col-span-2">
               <a
-                href="https://www.google.com/maps/dir/?api=1&destination=-1.9600128566295572,30.10838105230639"
+                href="https://maps.app.goo.gl/eQ8nB48ods2sZhvd9"
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Click to open directions to BYD Properties on Google Maps"
+                title="Click to open BYD Properties on Google Maps"
                 className="group relative block rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-gray-200 cursor-pointer"
                 style={{ aspectRatio: '16/9', minHeight: '380px' }}
               >
                 <iframe
-                  src="https://maps.google.com/maps?q=-1.9600128566295572,30.10838105230639&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.google.com/maps?q=BYD+Properties,+-1.960250,30.108457&t=&z=17&ie=UTF8&iwloc=B&output=embed"
                   className="w-full h-full absolute inset-0 pointer-events-none"
                   style={{ border: 0 }}
                   loading="lazy"
