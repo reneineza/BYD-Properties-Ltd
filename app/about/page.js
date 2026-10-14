@@ -40,6 +40,13 @@ const defaultTeam = [
     bio: 'Leads digital strategy, technology integration, and communications to deliver an exceptional client experience.',
     image: '/team/muhire-blande.jpg',
   },
+  {
+    name: 'Mukeshimana Mathieu',
+    role: 'Field Agent',
+    initials: 'MM',
+    bio: 'Dedicated field agent connecting clients with prime real estate opportunities and guiding on-site property viewings across Kigali.',
+    image: '/team/mukeshimana-mathieu.jpg',
+  },
 ];
 
 const defaultValues = [
@@ -163,7 +170,7 @@ export default async function AboutPage() {
             <h2 className="section-title">Meet Our Team</h2>
             <p className="text-gray-400 mt-4 text-sm">Hover over a card to learn more</p>
           </AnimatedSection>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-8">
             {displayTeam.map((member, i) => (
               <AnimatedSection key={member.name || i} delay={i * 0.1}>
                 <div className="team-flip-card">
