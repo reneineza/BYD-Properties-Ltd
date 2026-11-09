@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import BecomeAgentModal from './BecomeAgentModal';
 import SubscriptionForm from './SubscriptionForm';
 
 const footerLinks = {
@@ -29,7 +27,6 @@ const footerLinks = {
 };
 
 export default function Footer() {
-  const [agentModalOpen, setAgentModalOpen] = useState(false);
   const pathname = usePathname();
   const isAdminPage = pathname?.startsWith('/admin');
   if (isAdminPage) return null;
@@ -139,22 +136,20 @@ export default function Footer() {
             <div className="flex items-center gap-6 text-xs text-white/40">
               <Link href="/privacy-policy" className="hover:text-white/70 transition-colors">Privacy Policy</Link>
               <Link href="/terms-of-use" className="hover:text-white/70 transition-colors">Terms of Use</Link>
-              {/* BECOME AN AGENT */}
-              <button
-                onClick={() => setAgentModalOpen(true)}
+              {/* BECOME AN AGENT — now links to the dedicated page */}
+              <Link
+                href="/become-agent"
                 className="flex items-center gap-2 text-gold font-semibold hover:text-gold-light transition-colors duration-200 group"
               >
                 <span className="w-5 h-5 rounded-full border border-gold flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-white transition-all duration-200 text-xs">
                   +
                 </span>
                 Become an Agent
-              </button>
+              </Link>
             </div>
           </div>
         </div>
       </footer>
-
-      <BecomeAgentModal open={agentModalOpen} onClose={() => setAgentModalOpen(false)} />
     </>
   );
 }

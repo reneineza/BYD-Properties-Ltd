@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { getProperties, createProperty, getSubscriptions } from '@/lib/db';
+import { getProperties, createProperty, getSubscriptions, getAgentById } from '@/lib/db';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 import { revalidatePath } from 'next/cache';
 
 export const revalidate = 0; // Disable cache for properties list
@@ -52,9 +53,20 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Security: strictly enforce agent verification & approval
+  if (session.user.role === 'agent') {
+    const agent = await getAgentById(session.user.id);
+    if (!agent || (agent.status !== 'approved' && agent.status !== 'active') || !agent.email_verified_at) {
+      return NextResponse.json(
+        { error: 'Only approved agents with verified accounts can submit property listings.' },
+        { status: 403 }
+      );
+    }
   }
 
   const data = await request.json();

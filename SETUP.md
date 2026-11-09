@@ -38,10 +38,31 @@ Access at: **http://localhost:3000/admin**
 
 | Variable | Description |
 |---|---|
-| `NEXTAUTH_URL` | Your site URL (keep as `http://localhost:3000` for local) |
-| `NEXTAUTH_SECRET` | Change to a long random string before going live |
+| `NEXTAUTH_URL` | Your site URL (e.g. `http://localhost:3000` or production URL) |
+| `NEXTAUTH_SECRET` | Secret key used for JWT encryption and HMAC OTP generation |
 | `ADMIN_EMAIL` | Admin login email |
 | `ADMIN_PASSWORD` | Admin login password |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous public key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role secret (required for administrative database operations & bypassing RLS) |
+| `RESEND_API_KEY` | Resend API key for sending transactional OTP and approval emails |
+| `EMAIL_FROM` | Sender email address (default: `BYD Properties <alerts@bydproperties.rw>`) |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL (e.g. `https://www.bydproperties.rw`) |
+
+---
+
+## Database Migration (Agent OTP & Approval System)
+
+To support the agent registration, OTP email verification, and administrator approval system in Supabase:
+
+1. Open your **Supabase Dashboard** > **SQL Editor**.
+2. Run the script located at: `scripts/setup_agent_otp_schema.sql`
+3. This creates or updates:
+   - `agents` table with new status columns (`account_status`, `rejection_reason`, `approved_at`, `approved_by`, `email_verified_at`, etc.)
+   - `otp_verifications` table (securely stores HMAC-SHA256 hashed OTPs, expiration, and attempt counts)
+   - Performance and lookup indexes
+
+*(Note: When running without Supabase credentials in local development, the system automatically falls back to local data storage in `data/agents.json` and `data/otps.json`)*
 
 ---
 

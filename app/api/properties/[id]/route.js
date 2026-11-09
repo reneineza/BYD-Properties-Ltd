@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { getPropertyById, updateProperty, deleteProperty, getSubscriptions } from '@/lib/db';
+import { getPropertyById, updateProperty, deleteProperty, getSubscriptions, getAgentById } from '@/lib/db';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 import { revalidatePath } from 'next/cache';
 import { propertyAlertEmailHtml, agentPropertyApprovedEmailHtml, agentPropertyRejectedEmailHtml } from '@/lib/emailTemplates';
 import { createClient } from '@supabase/supabase-js';
@@ -19,8 +20,15 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    if (session.user.role === 'agent') {
+      const agent = await getAgentById(session.user.id);
+      if (!agent || (agent.status !== 'approved' && agent.status !== 'active') || !agent.email_verified_at) {
+        return NextResponse.json({ error: 'Only approved agents can modify property listings' }, { status: 403 });
+      }
+    }
 
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
       return NextResponse.json({ 

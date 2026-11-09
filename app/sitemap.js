@@ -14,6 +14,7 @@ export default async function sitemap() {
     { url: `${baseUrl}/services`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/become-agent`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
   ];
 
   const propertyRoutes = properties.map((p) => ({

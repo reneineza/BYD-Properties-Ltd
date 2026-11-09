@@ -14,6 +14,7 @@ const navLinks = [
   { href: '/services', label: 'Services' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
+  { href: '/become-agent', label: 'Become an Agent' },
 ];
 
 const WHATSAPP_URL =
