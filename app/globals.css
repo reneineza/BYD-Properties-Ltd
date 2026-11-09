@@ -6,6 +6,22 @@
   --navy: #1c2d37;
   --gold: #df9f3d;
   --cream: #f4f1ec;
+
+  /* shadcn UI variables mapped to BYD brand */
+  --background: 0 0% 100%;
+  --foreground: 204 33% 16%;
+  --card: 0 0% 100%;
+  --card-foreground: 204 33% 16%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 204 33% 16%;
+  --primary: 36 71% 56%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 38 24% 94%;
+  --muted-foreground: 204 18% 45%;
+  --accent: 36 71% 95%;
+  --accent-foreground: 204 33% 16%;
+  --border: 214 20% 90%;
+  --radius: 0.75rem;
 }
 
 * {

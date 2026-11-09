@@ -25,7 +25,12 @@ export async function GET(request) {
     let properties = await getProperties(agentId, onlyApproved);
 
     if (type && type !== 'all') {
-      properties = properties.filter((p) => p.type === type);
+      properties = properties.filter((p) => {
+        if (type === 'house' || type === 'residential') {
+          return p.type === 'residential' || p.type === 'house';
+        }
+        return p.type === type;
+      });
     }
     if (status && status !== 'all') {
       properties = properties.filter((p) => 

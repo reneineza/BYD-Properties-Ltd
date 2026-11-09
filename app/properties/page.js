@@ -8,13 +8,14 @@ import PropertyCard from '@/components/PropertyCard';
 import AnimatedSection from '@/components/AnimatedSection';
 import { neighborhoods } from '@/lib/neighborhoods';
 
-const TYPES = ['all', 'residential', 'commercial', 'land'];
+const TYPES = ['all', 'residential', 'apartment', 'commercial', 'land'];
 const STATUSES = ['all', 'for-sale', 'for-rent'];
 const LOCATIONS = ['all', ...Object.values(neighborhoods).map((n) => n.name.toLowerCase())];
 
 const OPTION_LABELS = {
   all: { Type: 'All Types', Status: 'All Status', Location: 'All Locations' },
-  residential: 'Residential',
+  residential: 'House / Residential',
+  apartment: 'Apartment',
   commercial: 'Commercial',
   land: 'Land Plot',
   'for-sale': 'For Sale',
@@ -206,14 +207,26 @@ function MobileFilterSheet({ type, status, location, setType, setStatus, setLoca
 // ── Main content ───────────────────────────────────────────────────────────
 function PropertiesContent() {
   const searchParams = useSearchParams();
+  const initialType = searchParams.get('type') === 'house' ? 'residential' : (searchParams.get('type') || 'all');
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [type, setType] = useState(searchParams.get('type') || 'all');
+  const [type, setType] = useState(initialType);
   const [status, setStatus] = useState(searchParams.get('status') || 'all');
   const [location, setLocation] = useState(searchParams.get('location') || 'all');
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const activeCount = [type, status, location].filter((v) => v !== 'all').length;
+
+  // Sync state if URL query params change (e.g. clicking navigation dropdown links)
+  useEffect(() => {
+    let t = searchParams.get('type') || 'all';
+    if (t === 'house') t = 'residential';
+    const s = searchParams.get('status') || 'all';
+    const l = searchParams.get('location') || 'all';
+    setType(t);
+    setStatus(s);
+    setLocation(l);
+  }, [searchParams]);
 
   useEffect(() => {
     setLoading(true);

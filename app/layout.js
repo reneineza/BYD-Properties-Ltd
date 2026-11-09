@@ -1,4 +1,3 @@
-import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -6,17 +5,8 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 import PageViewTracker from '@/components/PageViewTracker';
 import { getContent } from '@/lib/db';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
-  display: 'swap',
-});
+const inter = { variable: 'font-sans' };
+const playfair = { variable: 'font-serif' };
 
 const siteUrl = 'https://www.bydproperties.rw';
 

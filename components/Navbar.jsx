@@ -5,11 +5,38 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, ChevronDown, Home, Building, Building2, Search, ArrowRight } from 'lucide-react';
+
+const propertyMenuItems = [
+  {
+    label: 'House for sale',
+    description: 'Luxury villas, estates & modern family houses',
+    href: '/properties?type=residential&status=for-sale',
+    icon: Home,
+  },
+  {
+    label: 'Apartment for Rent',
+    description: 'Furnished, serviced & modern rental flats',
+    href: '/properties?type=apartment&status=for-rent',
+    icon: Building2,
+  },
+  {
+    label: 'Apartment for sale',
+    description: 'Prime residential apartments & penthouses',
+    href: '/properties?type=apartment&status=for-sale',
+    icon: Building,
+  },
+  {
+    label: 'All Properties',
+    description: 'Explore our complete portfolio across Rwanda',
+    href: '/properties',
+    icon: Search,
+  },
+];
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/properties', label: 'Properties' },
+  { href: '/properties', label: 'Properties', hasDropdown: true },
   { href: '/projects', label: 'Projects' },
   { href: '/services', label: 'Services' },
   { href: '/about', label: 'About' },
@@ -26,14 +53,12 @@ const WhatsAppIcon = () => (
   </svg>
 );
 
-// Hamburger — three bars that animate to X
 function HamburgerButton({ open, onClick }) {
   return (
     <button
       onClick={onClick}
       aria-label={open ? 'Close menu' : 'Open menu'}
       aria-expanded={open}
-      // Always on top; large 48×48 touch target
       className="relative z-[70] md:hidden flex items-center justify-center w-12 h-12 -mr-2 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
     >
       <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
@@ -61,6 +86,9 @@ function HamburgerButton({ open, onClick }) {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [propDropdownOpen, setPropDropdownOpen] = useState(false);
+  const [mobilePropOpen, setMobilePropOpen] = useState(true);
+  const dropdownTimerRef = useRef(null);
   const pathname = usePathname();
   const isAdminPage = pathname?.startsWith('/admin');
   const closeRef = useRef(null);
@@ -93,23 +121,38 @@ export default function Navbar() {
   // Close on route change
   useEffect(() => {
     setMenuOpen(false);
+    setPropDropdownOpen(false);
   }, [pathname]);
 
-  // Trap focus: move focus into menu when it opens
+  // Trap focus
   useEffect(() => {
     if (menuOpen && closeRef.current) {
       closeRef.current.focus();
     }
   }, [menuOpen]);
 
-  // Close on Escape key
+  // Escape key handler
   useEffect(() => {
     const handleKey = (e) => {
-      if (e.key === 'Escape') setMenuOpen(false);
+      if (e.key === 'Escape') {
+        setMenuOpen(false);
+        setPropDropdownOpen(false);
+      }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
+
+  const handleMouseEnter = () => {
+    if (dropdownTimerRef.current) clearTimeout(dropdownTimerRef.current);
+    setPropDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    dropdownTimerRef.current = setTimeout(() => {
+      setPropDropdownOpen(false);
+    }, 150);
+  };
 
   if (isAdminPage) return null;
 
@@ -136,23 +179,110 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-7 lg:gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-medium uppercase tracking-widest transition-colors duration-300 relative group ${
-                  pathname === link.href ? 'text-gold' : 'text-white/80 hover:text-white'
-                }`}
-              >
-                {link.label}
-                <span
-                  className={`absolute -bottom-1 left-0 h-px bg-gold transition-all duration-300 ${
-                    pathname === link.href ? 'w-full' : 'w-0 group-hover:w-full'
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+            {navLinks.map((link) => {
+              if (link.hasDropdown) {
+                const isPropertiesActive = pathname === '/properties' || pathname?.startsWith('/properties/');
+                return (
+                  <div
+                    key={link.label}
+                    className="relative"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <Link
+                      href={link.href}
+                      className={`text-sm font-medium uppercase tracking-widest transition-colors duration-300 relative group flex items-center gap-1.5 py-2 ${
+                        isPropertiesActive ? 'text-gold' : 'text-white/80 hover:text-white'
+                      }`}
+                    >
+                      <span>{link.label}</span>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                          propDropdownOpen ? 'rotate-180 text-gold' : 'text-white/50 group-hover:text-gold'
+                        }`}
+                      />
+                      <span
+                        className={`absolute bottom-0 left-0 h-px bg-gold transition-all duration-300 ${
+                          isPropertiesActive ? 'w-full' : 'w-0 group-hover:w-full'
+                        }`}
+                      />
+                    </Link>
+
+                    {/* Dropdown Menu */}
+                    <AnimatePresence>
+                      {propDropdownOpen && (
+                        <div className="absolute top-full -left-4 pt-2 z-50">
+                          <motion.div
+                            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                            transition={{ duration: 0.18, ease: 'easeOut' }}
+                            className="bg-navy-dark/95 border border-white/10 backdrop-blur-2xl rounded-2xl p-4 shadow-2xl w-[340px] text-white"
+                          >
+                            <div className="px-2 py-1.5 mb-2 border-b border-white/10 flex items-center justify-between">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
+                                Properties
+                              </span>
+                              <Link
+                                href="/properties"
+                                onClick={() => setPropDropdownOpen(false)}
+                                className="text-[11px] text-white/50 hover:text-gold transition-colors flex items-center gap-1"
+                              >
+                                View all <ArrowRight className="w-3 h-3" />
+                              </Link>
+                            </div>
+
+                            <div className="space-y-1">
+                              {propertyMenuItems.map((item) => {
+                                const Icon = item.icon;
+                                return (
+                                  <Link
+                                    key={item.label}
+                                    href={item.href}
+                                    onClick={() => setPropDropdownOpen(false)}
+                                    className="flex items-start gap-3.5 p-2.5 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all duration-200 group"
+                                  >
+                                    <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-navy group-hover:border-gold transition-colors duration-200 flex-shrink-0">
+                                      <Icon className="w-4 h-4" />
+                                    </div>
+                                    <div className="leading-tight">
+                                      <p className="text-sm font-semibold text-white group-hover:text-gold transition-colors">
+                                        {item.label}
+                                      </p>
+                                      <p className="text-xs text-white/55 group-hover:text-white/80 transition-colors mt-0.5">
+                                        {item.description}
+                                      </p>
+                                    </div>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </motion.div>
+                        </div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-sm font-medium uppercase tracking-widest transition-colors duration-300 relative group py-2 ${
+                    pathname === link.href ? 'text-gold' : 'text-white/80 hover:text-white'
                   }`}
-                />
-              </Link>
-            ))}
+                >
+                  {link.label}
+                  <span
+                    className={`absolute bottom-0 left-0 h-px bg-gold transition-all duration-300 ${
+                      pathname === link.href ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}
+                  />
+                </Link>
+              );
+            })}
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -164,7 +294,7 @@ export default function Navbar() {
             </a>
           </nav>
 
-          {/* Hamburger — always rendered so it stays on top of overlay */}
+          {/* Hamburger */}
           <HamburgerButton open={menuOpen} onClick={() => setMenuOpen((v) => !v)} />
         </div>
       </header>
@@ -178,14 +308,12 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 240 }}
-            // z-[60] sits above content but below the hamburger button (z-[70])
             className="fixed inset-0 z-[60] bg-navy md:hidden flex flex-col overflow-hidden"
-            // Swipe-to-dismiss: close if swiped right ≥80px
             onPanEnd={(_, info) => {
               if (info.offset.x > 80) setMenuOpen(false);
             }}
           >
-            {/* Top bar — logo + close */}
+            {/* Top bar */}
             <div className="flex items-center justify-between px-4 sm:px-6 pt-5 pb-6 border-b border-white/10 flex-shrink-0">
               <Link href="/" onClick={() => setMenuOpen(false)}>
                 <Image
@@ -196,7 +324,6 @@ export default function Navbar() {
                   className="h-10 w-auto object-contain opacity-90"
                 />
               </Link>
-              {/* Explicit close button for accessibility */}
               <button
                 ref={closeRef}
                 onClick={() => setMenuOpen(false)}
@@ -207,35 +334,98 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Nav links — scrollable in case of very small screens */}
-            <nav className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 py-8 flex flex-col gap-1">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + i * 0.07, duration: 0.35, ease: 'easeOut' }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className={`flex items-center justify-between w-full py-4 border-b border-white/8 group transition-colors duration-200 ${
-                      pathname === link.href ? 'text-gold' : 'text-white hover:text-gold'
-                    }`}
+            {/* Nav links */}
+            <nav className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 py-6 flex flex-col gap-2">
+              {navLinks.map((link, i) => {
+                if (link.hasDropdown) {
+                  return (
+                    <motion.div
+                      key={link.label}
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 + i * 0.06, duration: 0.35, ease: 'easeOut' }}
+                      className="border-b border-white/8 pb-3"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setMobilePropOpen((v) => !v)}
+                        className="flex items-center justify-between w-full py-3 text-white hover:text-gold transition-colors"
+                      >
+                        <span className="font-display font-bold text-2xl tracking-tight">
+                          {link.label}
+                        </span>
+                        <ChevronDown
+                          className={`w-5 h-5 text-gold transition-transform duration-300 ${
+                            mobilePropOpen ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+
+                      <AnimatePresence>
+                        {mobilePropOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden pl-2 pt-1 pb-2 space-y-2"
+                          >
+                            {propertyMenuItems.map((sub) => {
+                              const Icon = sub.icon;
+                              return (
+                                <Link
+                                  key={sub.label}
+                                  href={sub.href}
+                                  onClick={() => setMenuOpen(false)}
+                                  className="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-colors"
+                                >
+                                  <div className="w-8 h-8 rounded-lg bg-navy-dark flex items-center justify-center text-gold border border-white/10">
+                                    <Icon className="w-4 h-4" />
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-semibold text-white">
+                                      {sub.label}
+                                    </p>
+                                    <p className="text-[11px] text-white/50">
+                                      {sub.description}
+                                    </p>
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                }
+
+                return (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 + i * 0.06, duration: 0.35, ease: 'easeOut' }}
                   >
-                    <span className="font-display font-bold text-2xl sm:text-3xl tracking-tight">
-                      {link.label}
-                    </span>
-                    {/* Active dot */}
-                    {pathname === link.href && (
-                      <span className="w-2 h-2 rounded-full bg-gold flex-shrink-0" />
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`flex items-center justify-between w-full py-3.5 border-b border-white/8 group transition-colors duration-200 ${
+                        pathname === link.href ? 'text-gold' : 'text-white hover:text-gold'
+                      }`}
+                    >
+                      <span className="font-display font-bold text-2xl tracking-tight">
+                        {link.label}
+                      </span>
+                      {pathname === link.href && (
+                        <span className="w-2 h-2 rounded-full bg-gold flex-shrink-0" />
+                      )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </nav>
 
-            {/* Bottom CTA — always visible, safe-area aware */}
+            {/* Bottom CTA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

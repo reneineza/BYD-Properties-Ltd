@@ -14,10 +14,10 @@ const footerLinks = {
     { label: 'Contact', href: '/contact' },
   ],
   Properties: [
-    { label: 'For Sale', href: '/properties?status=for-sale' },
-    { label: 'For Rent', href: '/properties?status=for-rent' },
-    { label: 'Residential', href: '/properties?type=residential' },
-    { label: 'Commercial', href: '/properties?type=commercial' },
+    { label: 'House for Sale', href: '/properties?type=residential&status=for-sale' },
+    { label: 'Apartment for Rent', href: '/properties?type=apartment&status=for-rent' },
+    { label: 'Apartment for Sale', href: '/properties?type=apartment&status=for-sale' },
+    { label: 'Commercial Properties', href: '/properties?type=commercial' },
   ],
   Services: [
     { label: 'Property Sales', href: '/services/property-sales' },
